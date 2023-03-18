@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Shape represent the shape of a tile
+ * Shape represents the shape of a tile
  */
 public enum Shape
 {

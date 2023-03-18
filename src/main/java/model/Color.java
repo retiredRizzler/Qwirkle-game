@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Color represent color of a tile
+ * Color represents color of a tile
  */
 public enum Color
 {
