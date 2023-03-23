@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Tile defines a tile of our game
+ * Tile represents a piece of our game
  * @param color
  * @param shape
  */
