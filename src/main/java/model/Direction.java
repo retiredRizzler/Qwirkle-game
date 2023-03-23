@@ -1,23 +1,25 @@
+package model;
+
 /**
  * Direction represents the direction we chose to put our tiles on the game board
  */
 public enum Direction {
-    LEFT(0, -1), RIGHT(0, 1), UP(-1, 0), DOWN(1, 0);
+    LEFT(0,-1), RIGHT(0,1), UP(-1,0), DOWN(1,0);
 
     private int deltaRow;
-    public int getDeltaRow() { return deltaRow; }
+    public int getDeltaRow() {return deltaRow;}
 
     private int deltaCol;
-    public int getDeltaCol() { return deltaCol; }
+    public int getDeltaCol() {return deltaCol;}
 
-    public Direction(int row, int col)
+    Direction(int row, int col)
     {
         this.deltaRow = row;
         this.deltaCol = col;
     }
 
     /**
-     * Return the opposite direction from the current direction
+     * Return the opposite from the current direction
      */
     public Direction opposite()
     {
