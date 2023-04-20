@@ -42,23 +42,18 @@ public class Grid {
         if (!isEmpty()) {
             throw new QwirkleException("The grid is not empty");
         }
-            for (int k = 1; k<line.length; k++) {
 
-                if (isSameTile(line[0], line[k])) {
-                    throw new QwirkleException("Tiles don't match (same shape and same color)");
-                }
+        if (!tilesMatchEachOther(line)) {
+            throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
+                            "(or both)");
+        }
 
-                if (!eitherSameShapeOrSameColor(line[0], line[k])) {
-                    throw new QwirkleException("Tiles don't match (not the same shape and not the same color)");
-                }
-            }
+        int row = tiles.length/2; // 45
+        int col = tiles[0].length/2; // 45
+        tiles[row][col] = line[0];
+        isEmpty = false;
 
-            int row = tiles.length/2; // 45
-            int col = tiles[0].length/2; // 45
-            tiles[row][col] = line[0];
-            isEmpty = false;
-
-            for (int i = 1; i<line.length; i++) {
+        for (int i = 1; i<line.length; i++) {
                 tiles[row + d.getDeltaRow()] [col + d.getDeltaCol()] = line[i];
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
@@ -79,6 +74,54 @@ public class Grid {
     }
 
     /**
+     * Adding tile(s) to a specific position in a specific direction on the grid
+     * @param row the row of the grid
+     * @param col the column of the grid
+     * @param d the direction
+     * @param line the tile(s) you want to add
+     */
+    public void add(int row, int col, Direction d, Tile... line)
+    {
+        // Check first if the tiles we want to add match each other
+        if (!tilesMatchEachOther(line)) {
+                throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
+                        "(or both)");
+            }
+
+        if (areRulesValid(row, col, line[0])) {
+            tiles[row][col] = line[0];
+        }
+        row += d.getDeltaRow();
+        col += d.getDeltaCol();
+
+        for (int i = 1; i<line.length; i++) {
+            if(areRulesValid(row, col, line[i])) {
+                tiles[row][col] = line[i];
+                row += d.getDeltaRow();
+                col += d.getDeltaCol();
+            }
+        }
+    }
+
+    /**
+     * Check if tiles match each other in a Tile varargs
+     * @param line the tile(s) we want to check
+     * @return false if one tile doesn't match
+     */
+    private boolean tilesMatchEachOther(Tile... line)
+    {
+        if (line.length == 1) {
+            return true;
+        }
+        for (int k = 1; k<line.length; k++) {
+            if (!eitherSameShapeOrSameColor(line[0], line[k])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Check if the rules when you want to add a tile to a specific positions are valid
      * @param row row of the grid
      * @param col column of the grid
@@ -96,8 +139,7 @@ public class Grid {
         }
 
         if(arePositionsAroundFree(row, col)){
-            throw new QwirkleException("The positions around the tile you want to add aren't occupied " +
-                    "by at least one tile");
+            throw new QwirkleException("The positions around the tile aren't occupied by at least one tile");
         }
 
         Direction dir[] = Direction.values();
@@ -112,12 +154,9 @@ public class Grid {
                 if (nTile == null)
                     break;
 
-                if (isSameTile(tile, nTile)) {
-                    throw new QwirkleException("Tiles don't match : same shape and same color");
-                }
-
                 if (!eitherSameShapeOrSameColor(tile, nTile)) {
-                    throw new QwirkleException("Tiles don't match : not the same shape and not the same color");
+                    throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
+                            "(or both)");
                 }
 
                 nRow += d.getDeltaRow();
@@ -137,7 +176,7 @@ public class Grid {
         Direction dir[] = Direction.values();
         for (Direction d : dir) {
 
-            // If at least one position around  is occupied by a tile
+            // If at least one position around is occupied by a tile
             if (tiles[row + d.getDeltaRow()] [col + d.getDeltaCol()] != null) {
                 return false;
             }
@@ -157,7 +196,7 @@ public class Grid {
     }
 
     /**
-     * Return true if two tiles have the same shapes and not the same colors
+     * Return true either if tiles have the same shape or the same color but not both
      */
     private boolean eitherSameShapeOrSameColor(Tile tile0, Tile tile1)
     {
@@ -165,27 +204,6 @@ public class Grid {
                 ^
                 tile0.color() == tile1.color();
     }
-
-    /**
-     * Return true if two tiles have the same colors and not the same shapes
-
-    private boolean isSameColor(Tile tile0 ,Tile tile1)
-    {
-        return (tile0.color() == tile1.color())
-                &&
-                (tile0.shape() != tile1.shape());
-    }
-
-    /**
-     * Return true if both tiles have the same colors and the same shapes
-     */
-    private boolean isSameTile(Tile tile0, Tile tile1)
-    {
-        return tile0.equals(tile1);
-    }
-
-    public void add(int row, int col, Direction d, Tile... line)
-    {}
 
 }
 

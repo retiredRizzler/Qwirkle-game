@@ -77,7 +77,7 @@ class GridTest {
         assertDoesNotThrow(() -> get(g, -250, 500));
         assertNull(get(g, -250, 500));
     }
-    
+
     @Test
     void rules_cédric_b()
     {
@@ -89,11 +89,7 @@ class GridTest {
         var t4 = new Tile (RED, SQUARE);
         var t5 = new Tile (BLUE, SQUARE);
         var t6 = new Tile (PURPLE, SQUARE);
-        // here, wrong method add, will update it when method will be finished
-        add(grid, 1, 0, t4);
-        add(grid, 1, 1, t5);
-        add(grid, 1, 2, t6);
-
+        add(grid, 1, 0, RIGHT, t4, t5, t6);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -114,10 +110,7 @@ class GridTest {
         var t4 = new Tile (RED, SQUARE);
         var t5 = new Tile (BLUE, SQUARE);
         var t6 = new Tile (PURPLE, SQUARE);
-        // here, wrong method add, will update it when method will be finished
-        add(grid, 1, 0, t4);
-        add(grid, 1, 1, t5);
-        add(grid, 1, 2, t6);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
 
         var t7 = new Tile(BLUE, ROUND);
         add(grid, 0, 1, t7);
@@ -129,5 +122,58 @@ class GridTest {
         assertEquals(t5, get(grid, 1, 1 ));
         assertEquals(t6, get(grid, 1, 2));
         assertEquals(t7, get(grid, 0, 1));
+    }
+
+    @Test
+    void rules_vincent_c()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+        assertEquals(t7, get(grid, 0, 1));
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+    }
+
+    @Test
+    void addTest_same_tile_on_same_line()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0, t4);
+        add(grid, 1, 1, t5);
+        add(grid, 1, 2, t6);
+
+        var tCrash = new Tile (RED, PLUS);
+
+        assertThrows(QwirkleException.class, ()->{
+            grid.add(-2, 0, tCrash);
+        });
     }
 }
