@@ -86,21 +86,43 @@ public class Grid {
         if (!tilesMatchEachOther(line)) {
                 throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
                         "(or both)");
-            }
-
-        if (areRulesValid(row, col, line[0])) {
-            tiles[row][col] = line[0];
         }
-        row += d.getDeltaRow();
-        col += d.getDeltaCol();
-
-        for (int i = 1; i<line.length; i++) {
+        for (int i = 0; i<line.length; i++) {
             if(areRulesValid(row, col, line[i])) {
                 tiles[row][col] = line[i];
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
             }
         }
+    }
+
+    public void add(TileAtPosition... line)
+    {
+        // There is a specific rule about that if we had a tile, and we want to add a second tile or more,
+        // this/these tile(s) must be on the same line (same row or same column).
+        if (!areTilesOnSameLine(line)) {
+            throw new QwirkleException("Tiles must be on the same line");
+        }
+        for (int i = 0; i<line.length; i++) {
+            TileAtPosition t = line[i];
+            add(t.row(), t.col(), t.tile());
+        }
+
+    }
+
+    /**
+     * Check if all the tiles of a varargs have the same row or the same column
+     * @param line our tile(s)
+     * @return true if all the tiles have the same row or the same column
+     */
+    private boolean areTilesOnSameLine(TileAtPosition... line)
+    {
+        for ( int k = 1; k<line.length; k++) {
+            if (!(line[0].row() == line[k].row()) && !(line[0].col() == line[k].col())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -110,9 +132,6 @@ public class Grid {
      */
     private boolean tilesMatchEachOther(Tile... line)
     {
-        if (line.length == 1) {
-            return true;
-        }
         for (int k = 1; k<line.length; k++) {
             if (!eitherSameShapeOrSameColor(line[0], line[k])) {
                 return false;

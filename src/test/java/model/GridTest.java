@@ -79,6 +79,55 @@ class GridTest {
     }
 
     @Test
+    void rules_same_tile_on_same_line()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0, t4);
+        add(grid, 1, 1, t5);
+        add(grid, 1, 2, t6);
+
+        var tCrash = new Tile (RED, PLUS);
+
+        assertThrows(QwirkleException.class, ()->{
+            grid.add(-2, 0, tCrash);
+        });
+    }
+
+    @Test
+    void rules_tiles_must_be_on_same_lines_throw()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, 2, new Tile(PURPLE, ROUND));
+        assertThrows(QwirkleException.class, ()->{
+            grid.add(t10,t11);
+        });
+    }
+
+    @Test
     void rules_cédric_b()
     {
         var t1 = new Tile(RED, ROUND);
@@ -156,7 +205,7 @@ class GridTest {
     }
 
     @Test
-    void addTest_same_tile_on_same_line()
+    void rules_sonia_e()
     {
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
@@ -166,14 +215,514 @@ class GridTest {
         var t4 = new Tile (RED, SQUARE);
         var t5 = new Tile (BLUE, SQUARE);
         var t6 = new Tile (PURPLE, SQUARE);
-        add(grid, 1, 0, t4);
-        add(grid, 1, 1, t5);
-        add(grid, 1, 2, t6);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
 
-        var tCrash = new Tile (RED, PLUS);
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
 
-        assertThrows(QwirkleException.class, ()->{
-            grid.add(-2, 0, tCrash);
-        });
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+    }
+
+    @Test
+    void rules_cédric_f()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+    }
+
+    @Test
+    void rules_elvire_g()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+    }
+
+    @Test
+    void rules_vincent_h()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        var t16 = new Tile(ORANGE, CROSS);
+        var t17 = new Tile(ORANGE, DIAMOND);
+        add(grid, -2, -3, DOWN, t16,t17);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+
+        assertEquals(t16, get(grid, -2, -3));
+        assertEquals(t17, get(grid, -1, -3));
+    }
+
+    @Test
+    void rules_sonia_i()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        var t16 = new Tile(ORANGE, CROSS);
+        var t17 = new Tile(ORANGE, DIAMOND);
+        add(grid, -2, -3, DOWN, t16,t17);
+
+        var t18 = new Tile(YELLOW, DIAMOND);
+        var t19 = new Tile(YELLOW, ROUND);
+        add(grid, -1, -2, DOWN, t18,t19);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+
+        assertEquals(t16, get(grid, -2, -3));
+        assertEquals(t17, get(grid, -1, -3));
+
+        assertEquals(t18, get(grid, -1, -2));
+        assertEquals(t19, get(grid, 0, -2));
+
+    }
+
+    @Test
+    void rules_cédric_j()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        var t16 = new Tile(ORANGE, CROSS);
+        var t17 = new Tile(ORANGE, DIAMOND);
+        add(grid, -2, -3, DOWN, t16,t17);
+
+        var t18 = new Tile(YELLOW, DIAMOND);
+        var t19 = new Tile(YELLOW, ROUND);
+        add(grid, -1, -2, DOWN, t18,t19);
+
+        var t20 = new Tile(RED, STAR);
+        add(grid, -3, 0, t20);
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+
+        assertEquals(t16, get(grid, -2, -3));
+        assertEquals(t17, get(grid, -1, -3));
+
+        assertEquals(t18, get(grid, -1, -2));
+        assertEquals(t19, get(grid, 0, -2));
+        assertEquals(t20, get(grid, -3, 0));
+    }
+
+    @Test
+    void rules_elvire_k()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        var t16 = new Tile(ORANGE, CROSS);
+        var t17 = new Tile(ORANGE, DIAMOND);
+        add(grid, -2, -3, DOWN, t16,t17);
+
+        var t18 = new Tile(YELLOW, DIAMOND);
+        var t19 = new Tile(YELLOW, ROUND);
+        add(grid, -1, -2, DOWN, t18,t19);
+
+        var t20 = new Tile(RED, STAR);
+        add(grid, -3, 0, t20);
+
+        var t21 = new Tile(BLUE, CROSS);
+        var t22 = new Tile(RED, CROSS);
+        var t23 = new Tile(ORANGE, CROSS);
+        add(grid, 2, 1, LEFT, t21,t22,t23);
+
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+
+        assertEquals(t16, get(grid, -2, -3));
+        assertEquals(t17, get(grid, -1, -3));
+
+        assertEquals(t18, get(grid, -1, -2));
+        assertEquals(t19, get(grid, 0, -2));
+        assertEquals(t20, get(grid, -3, 0));
+
+        assertEquals(t21, get(grid, 2, 1));
+        assertEquals(t22, get(grid, 2, 0));
+        assertEquals(t23, get(grid, 2, -1));
+    }
+
+    @Test
+    void rules_vincent_l()
+    {
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        add(grid, 1, 0,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        add(grid, 0, 1, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        add(grid, -2, -1, DOWN, t8,t9);
+
+        var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
+        var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
+        grid.add(t10,t11);
+
+        var t12 = new Tile(ORANGE, SQUARE);
+        var t13 = new Tile(RED, SQUARE);
+        add(grid, 1, 3, DOWN, t12,t13);
+
+        var t14 = new Tile(YELLOW, STAR);
+        var t15 = new Tile(ORANGE, STAR);
+        add(grid, -3, -2, LEFT, t14,t15);
+
+        var t16 = new Tile(ORANGE, CROSS);
+        var t17 = new Tile(ORANGE, DIAMOND);
+        add(grid, -2, -3, DOWN, t16,t17);
+
+        var t18 = new Tile(YELLOW, DIAMOND);
+        var t19 = new Tile(YELLOW, ROUND);
+        add(grid, -1, -2, DOWN, t18,t19);
+
+        var t20 = new Tile(RED, STAR);
+        add(grid, -3, 0, t20);
+
+        var t21 = new Tile(BLUE, CROSS);
+        var t22 = new Tile(RED, CROSS);
+        var t23 = new Tile(ORANGE, CROSS);
+        add(grid, 2, 1, LEFT, t21,t22,t23);
+
+        var t24 = new Tile(YELLOW, SQUARE);
+        var t25 = new Tile(BLUE, SQUARE);
+        add(grid, 1, 4, DOWN, t24,t25);
+
+
+        assertEquals(t1, get(grid, 0, 0));
+        assertEquals(t2, get(grid, -1, 0));
+        assertEquals(t3, get(grid, -2, 0));
+
+        assertEquals(t4, get(grid, 1, 0));
+        assertEquals(t5, get(grid, 1, 1 ));
+        assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(t8, get(grid, -2, -1));
+        assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(t10.tile(), get(grid, -3, -1));
+        assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(t12, get(grid, 1, 3));
+        assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(t14, get(grid, -3, -2));
+        assertEquals(t15, get(grid, -3, -3));
+
+        assertEquals(t16, get(grid, -2, -3));
+        assertEquals(t17, get(grid, -1, -3));
+
+        assertEquals(t18, get(grid, -1, -2));
+        assertEquals(t19, get(grid, 0, -2));
+        assertEquals(t20, get(grid, -3, 0));
+
+        assertEquals(t21, get(grid, 2, 1));
+        assertEquals(t22, get(grid, 2, 0));
+        assertEquals(t23, get(grid, 2, -1));
+
+        assertEquals(t24, get(grid, 1, 4));
+        assertEquals(t25, get(grid, 2, 4));
     }
 }

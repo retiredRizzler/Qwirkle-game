@@ -77,9 +77,9 @@ public class QwirkleTestUtils {
      * @param row  a row number, with 0 being the center row.
      * @param col  a column number, with 0 being the center column.
      * @param tile a tile to insert into the object.
-
-    static TileAtPosition createTileAtpos(int row, int col, Tile tile) {
+    */
+    static TileAtPosition createTileAtPos(int row, int col, Tile tile) {
         return new TileAtPosition(INITIAL_ROW + row, INITIAL_COLUMN + col, tile);
     }
-    */
+
 }
