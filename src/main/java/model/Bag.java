@@ -69,15 +69,14 @@ public final class Bag {
      */
     public Tile[] getRandomTiles(int n)
     {
-        if(tiles.isEmpty() || tiles.size()<n)
+        if(tiles.isEmpty() || tiles.size() < n)
         {
             return null;
         }
 
-        Tile[] tab = new Tile [n];
         Random r = new Random();
         // Convert our tab in a temporary list, so we can easily add values in it
-        List<Tile> tempList = new ArrayList(Arrays.asList(tab));
+        List<Tile> tempList = new ArrayList();
 
         for(int i = 0; i<n; i++)
         {
@@ -87,9 +86,8 @@ public final class Bag {
             // Removing the tile we got from the list, so we don't use a tile more than once
             tiles.remove(randIndex);
         }
-        // No need to convert back our list to an array because the method Array.asList do this automatically for us
 
-        return tab;
+        return tempList.toArray(new Tile[0]);
     }
 
 }

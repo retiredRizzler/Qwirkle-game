@@ -101,7 +101,7 @@ public class Grid {
         // There is a specific rule about that if we had a tile, and we want to add a second tile or more,
         // this/these tile(s) must be on the same line (same row or same column).
         if (!areTilesOnSameLine(line)) {
-            throw new QwirkleException("Tiles must be on the same line");
+            throw new QwirkleException("Each tile you cant to add must be on the same line");
         }
         for (int i = 0; i<line.length; i++) {
             TileAtPosition t = line[i];

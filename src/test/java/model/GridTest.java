@@ -128,7 +128,7 @@ class GridTest {
     }
 
     @Test
-    void rules_cédric_b()
+    void rules_cedric_b()
     {
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
@@ -246,7 +246,7 @@ class GridTest {
     }
 
     @Test
-    void rules_cédric_f()
+    void rules_cedric_f()
     {
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
@@ -481,7 +481,7 @@ class GridTest {
     }
 
     @Test
-    void rules_cédric_j()
+    void rules_cedric_j()
     {
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
