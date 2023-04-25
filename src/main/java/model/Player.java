@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a player of the game
+ */
 public class Player {
 
     private String name;
@@ -57,14 +60,5 @@ public class Player {
         for (int i = 0; i < ts.length; i++) {
             tiles.remove(ts[i]);
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Bag.getInstance().size());
-        Player player = new Player("p1");
-        player.refill();
-        System.out.println(player.getHand());
-        System.out.println(player.getHand().get(0).color());
-        System.out.println(Bag.getInstance().size());
     }
 }
