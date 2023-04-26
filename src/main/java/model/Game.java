@@ -62,7 +62,7 @@ public class Game {
     public void play(int... is)
     {
         TileAtPosition[] tap = new TileAtPosition[is.length];
-        // In this for loop we have to take iterate it only with multiple of 3 because every 3 indexes we have a new
+        // In this for loop we have to iterate it only with multiple of 3 because every 3 indexes we have a new
         // TileAtPosition object.
         for (int i = 0; i < is.length; i += 3) {
             int r = is[i];
@@ -107,7 +107,7 @@ public class Game {
     }
 
     /**
-     * Switch round when current player can't play
+     * Switch round to the next player
      */
     public void pass() {
         if (currentPlayer != player.length - 1) {
