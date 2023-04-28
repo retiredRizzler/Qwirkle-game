@@ -39,6 +39,7 @@ public class Game {
      */
     public void play(int row, int col, int index) {
         grid.add(row, col, player[currentPlayer].getHand().get(index));
+        pass();
     }
 
     /**
@@ -51,6 +52,7 @@ public class Game {
      */
     public void play(int row, int col, Direction d, int... indexes) {
         grid.add(row, col, d, getTiles(indexes));
+        pass();
     }
 
     /**
@@ -71,6 +73,7 @@ public class Game {
             tap[i] = new TileAtPosition(r, c, t);
         }
         grid.add(tap);
+        pass();
     }
 
     /**
