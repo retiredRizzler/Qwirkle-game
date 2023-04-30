@@ -725,4 +725,548 @@ class GridTest {
         assertEquals(t24, get(grid, 1, 4));
         assertEquals(t25, get(grid, 2, 4));
     }
+
+    @Test
+    void testDoubloneonAligne() {
+        var tile1 = new Tile(RED, SQUARE);
+        var tile2 = new Tile(RED, STAR);
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        var t4 = new Tile(RED,DIAMOND);
+        try {
+            grid.firstAdd(RIGHT,t1,t2,t3,tile2,tile1);
+            assertThrows(QwirkleException.class, () -> grid.add(45,50, t4));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    @Test
+    void testsituationAechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        var t4 = new Tile(BLUE,PLUS);
+
+        try{
+            assertThrows(QwirkleException.class,()->grid.firstAdd(RIGHT,t1,t2,t3,t4));
+        }catch (Exception e){
+            throw e ;
+        }
+
+    }
+    @Test
+    void testsituationBechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+
+        try{
+            assertThrows(QwirkleException.class,()->grid.add(46,45,RIGHT,t6,t5,t4));
+        }catch (Exception e){
+            throw e ;
+        }
+
+    }
+
+    @Test
+    void testsituationCechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+
+        try{
+            assertThrows(QwirkleException.class,()->grid.add(44,45,t7));
+        }catch (Exception e){
+            throw e ;
+        }
+    }
+    @Test
+    void testsituationDechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        try{
+            assertThrows(QwirkleException.class,()->grid.add(43,44,Direction.DOWN,t9,t8));
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Test
+    void situtationEechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(RED, CROSS) ;
+        TileAtPosition x = new TileAtPosition(45,44,t10);
+        TileAtPosition v = new TileAtPosition(42,44,t11);
+
+        try {
+            assertThrows(QwirkleException.class,()->grid.add(x,v));
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    @Test
+    void situationFechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        var x =  new Tile(YELLOW,PLUS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            assertThrows(QwirkleException.class, () -> grid.add(46,48,DOWN,t12,t13));
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
+
+    @Test
+    void situationGechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        var x =  new Tile(YELLOW,PLUS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+
+
+            assertThrows(QwirkleException.class, () ->   grid.add(42,43, RIGHT,t15,t14));
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
+
+    @Test
+    void situationHechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(ORANGE, Shape.PLUS);
+        var tile2 = new Tile(ORANGE, Shape.STAR);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+            grid.add(42,43,Direction.LEFT,t14,t15);
+            //H
+            assertThrows(QwirkleException.class, () ->grid.add(43,42,Direction.DOWN,t16,t17,tile1,tile2));
+
+        }catch (Exception e){
+            throw e ;
+        }
+
+    }
+    @Test
+    void situationIechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        var x =  new Tile(YELLOW,PLUS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+            grid.add(42,43,Direction.LEFT,t14,t15);
+            //H
+            grid.add(43,42,Direction.DOWN,t16,t17);
+            //x
+            // grid.add(42,41,Direction.LEFT,tile1,tile2);
+            //I
+            grid.add(44,43,Direction.DOWN,t18,t19);
+            assertThrows(QwirkleException.class, () -> grid.add(43,43, x));
+        }catch (Exception e){
+            throw e;
+        }
+
+
+
+
+    }
+
+    @Test
+    void situationJechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        //situation J
+        var t20 = new Tile(Color.RED, CROSS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+            grid.add(42,43,Direction.LEFT,t14,t15);
+            //H
+            grid.add(43,42,Direction.DOWN,t16,t17);
+            //x
+            // grid.add(42,41,Direction.LEFT,tile1,tile2);
+            //I
+            grid.add(44,43,Direction.DOWN,t18,t19);
+            //J
+
+            assertThrows(QwirkleException.class, () ->  grid.add(42,45,t20));
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+
+    @Test
+    void situationKehec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        //situation J
+        var t20 = new Tile(Color.RED, Shape.STAR);
+        //situation K
+        var t21 = new Tile(BLUE, CROSS);
+        var t22 = new Tile(RED, CROSS);
+        var t23 = new Tile(Color.ORANGE, CROSS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+            grid.add(42,43,Direction.LEFT,t14,t15);
+            //H
+            grid.add(43,42,Direction.DOWN,t16,t17);
+            //x
+            // grid.add(42,41,Direction.LEFT,tile1,tile2);
+            //I
+            grid.add(44,43,Direction.DOWN,t18,t19);
+            //J
+            grid.add(42,45,t20);
+            //K
+            assertThrows(QwirkleException.class, () ->   grid.add(47,47 , Direction.LEFT,t21,t22,t23));
+
+        }catch (Exception e){
+            throw e ;
+        }
+    }
+
+    @Test
+    void situationLechec(){
+        var t1 = new Tile(RED, Shape.ROUND);
+        var t2 = new Tile(RED, Shape.DIAMOND);
+        var t3 = new Tile(RED, Shape.PLUS);
+        //cedrick tiles
+        var t4 = new Tile(RED,Shape.SQUARE) ;
+        var t5 = new Tile (BLUE , Shape.SQUARE) ;
+        var t6 = new Tile(PURPLE,Shape.SQUARE) ;
+        // Elvire
+        var t7 = new Tile(BLUE,Shape.ROUND) ;
+        //Vincent
+        var t8 = new Tile(GREEN,Shape.PLUS) ;
+        var t9 = new Tile (GREEN,Shape.DIAMOND) ;
+
+        // sonia situation E
+        var t10 = new Tile (GREEN , Shape.ROUND) ;
+        var t11 = new Tile(GREEN,Shape.STAR) ;
+
+        //situation F
+        var t12 = new Tile(Color.RED, Shape.SQUARE);
+        var t13= new Tile(Color.YELLOW, Shape.SQUARE);
+        //situation G
+        var t14 = new Tile(YELLOW, Shape.STAR);
+        var t15 = new Tile(ORANGE, Shape.STAR);
+        // Situation H
+        var t16 = new Tile(Color.ORANGE, CROSS);
+        var  t17= new Tile(Color.ORANGE, Shape.DIAMOND);
+        // situation x
+        var tile1 = new Tile(GREEN, Shape.PLUS);
+        var tile2 = new Tile(GREEN, Shape.STAR);
+
+        //situation I
+        var t18 = new Tile(Color.YELLOW, Shape.DIAMOND);
+        var t19 = new Tile(Color.YELLOW, Shape.ROUND);
+        //situation J
+        var t20 = new Tile(Color.RED, Shape.STAR);
+        //situation K
+        var t21 = new Tile(BLUE, CROSS);
+        var t22 = new Tile(RED, CROSS);
+        var t23 = new Tile(Color.ORANGE, CROSS);
+        try {
+            grid.firstAdd(Direction.UP, t1, t2, t3);
+            grid.add(46,45,Direction.RIGHT,t4,t5,t6) ;
+            grid.add(45,46,t7);
+            grid.add(43,44,Direction.DOWN,t8,t9);
+            grid.add(45,44,t10);
+            grid.add(42,44,t11);
+            //F
+            grid.add(46,48,Direction.DOWN,t13,t12);
+            //G
+            grid.add(42,43,Direction.LEFT,t14,t15);
+            //H
+            grid.add(43,42,Direction.DOWN,t16,t17);
+            //x
+            // grid.add(42,41,Direction.LEFT,tile1,tile2);
+            //I
+            grid.add(44,43,Direction.DOWN,t18,t19);
+            //J
+            grid.add(42,45,t20);
+            //K
+            grid.add(47,46 , Direction.LEFT,t21,t22,t23);
+            //situation L
+            var t24 = new Tile(Color.ORANGE, Shape.SQUARE);
+            var t25 = new Tile(Color.BLUE, Shape.SQUARE);
+
+            assertThrows(QwirkleException.class, () ->grid.add(46,49,Direction.DOWN,t25,t24) );
+
+        }catch (Exception e){
+            throw e ;
+        }
+
+    }
+
 }

@@ -7,23 +7,23 @@ public enum Color {
     BLUE("\033[34m"), RED("\033[31m"), GREEN("\033[32m"), ORANGE("\033[38;5;214m"),
     YELLOW("\033[38;5;227m"), PURPLE("\033[35m");
 
-    private String colorCode;
+    private String aCode;
 
     /**
      * Constructor for Color enum
-     * @param colorCode the ansi code of the color
+     * @param ansiCode the ansi code of the color
      */
-    private Color(String colorCode)
+    private Color(String ansiCode)
     {
-        this.colorCode = colorCode;
+        this.aCode = ansiCode;
     }
 
     /**
-     * Getter for colorCode of a color
-     * @return String color code
+     * Getter for the ansi code of a color
+     * @return String the ansi code of the color
      */
     public String getColorCode()
     {
-        return colorCode;
+        return aCode;
     }
 }

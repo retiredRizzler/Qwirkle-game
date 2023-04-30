@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,7 +12,6 @@ public class GridView {
     public GridView(Grid grid)
     {
         this.grid = grid;
-
     }
     Tile get(int row, int col)
     {
@@ -22,55 +22,65 @@ public class GridView {
         return grid.isEmpty();
     }
 
-    public void displayGrid()
+    public void displayGrid(GridView grid)
     {
         List<Integer> lR = listRow();
         List<Integer> lC = listCol();
-        int beginRow = lR.get(0);
-        int beginCol = lC.get(0);
-        int lastRow = lR.get(lR.size() - 1);
-        int lastCol = lC.get(lC.size() - 1);
+        int beginRow = Collections.min(lR);
+        int beginCol = Collections.min(lC);
+        int lastRow = Collections.max(lR);
+        int lastCol = Collections.max(lC);
 
         for (int r = beginRow; r <= lastRow; r++) {
             System.out.println();
-            System.out.print( r +" |");
+            System.out.print( r + " |");
             for (int c = beginCol; c <= lastCol; c++) {
                 if (get(r, c) != null) {
-                    System.out.print(get(r, c).toString());
+                    System.out.print(grid.get(r, c) + "  ");
+                } else {
+                    System.out.print("    ");
                 }
-
             }
         }
         System.out.println();
+        System.out.println();
+
+        System.out.print("    ");
         for (int c = beginCol; c <= lastCol; c++) {
-            System.out.print(c);
+                System.out.print(c + "  ");
         }
+        System.out.println();
     }
 
+    /**
+     *
+     * @return List of integer which represents all the rows occupied by at least one tile
+     */
     private List<Integer> listRow()
     {
         List<Integer> lR = new ArrayList();
         for (int r = 0; r < 91; r++) {
             for (int c = 0; c < 91; c++) {
                 if (get(r, c) != null) {
-                    if (!lR.contains(r)) {
                         lR.add(r);
-                    }
                 }
             }
         }
         return lR;
     }
 
+    /**
+     *
+     * @return List of integer which represents all the column occupied by at least one tile
+     */
     private List<Integer> listCol()
     {
         List<Integer> lC = new ArrayList();
         for (int r = 0; r < 91; r++) {
             for (int c = 0; c < 91; c++) {
                 if (get(r, c) != null) {
-                    if(!lC.contains(c)) {
                         lC.add(c);
-                    }
+
                 }
             }
         }

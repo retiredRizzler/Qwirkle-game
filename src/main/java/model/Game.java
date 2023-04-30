@@ -8,14 +8,15 @@ public class Game {
     private Player[] player;
     private int currentPlayer;
 
-    public Game(List<String> players) {
+    public Game(List<String> players)
+    {
         player = new Player[players.size()];
 
         for (int i = 0; i < player.length; i++) {
-            for (String s : players) {
-                player[i] = new Player(s);
+                player[i] = new Player(players.get(i));
+                player[i].refill();
             }
-        }
+
         grid = new Grid();
         currentPlayer = 0;
     }
@@ -26,8 +27,12 @@ public class Game {
      * @param d  Direction to play the first move
      * @param is indexes of list
      */
-    public void first(Direction d, int... is) {
-        grid.firstAdd(d, getTiles(is));
+    public void first(Direction d, int... is)
+    {         grid.firstAdd(d, getTiles(is));
+
+        player[currentPlayer].remove(getTiles(is));
+        player[currentPlayer].refill();
+        pass();
     }
 
     /**
@@ -37,8 +42,11 @@ public class Game {
      * @param col   the column of the grid
      * @param index the index of the tile from player's hand
      */
-    public void play(int row, int col, int index) {
+    public void play(int row, int col, int index)
+    {
         grid.add(row, col, player[currentPlayer].getHand().get(index));
+        player[currentPlayer].remove(getTiles(index));
+        player[currentPlayer].refill();
         pass();
     }
 
@@ -50,8 +58,10 @@ public class Game {
      * @param d       the direction you want to add your tiles
      * @param indexes the index of the tile from player's hand
      */
-    public void play(int row, int col, Direction d, int... indexes) {
+    public void play(int row, int col, Direction d, int... indexes)
+    {
         grid.add(row, col, d, getTiles(indexes));
+        player[currentPlayer].refill();
         pass();
     }
 
@@ -73,6 +83,7 @@ public class Game {
             tap[i] = new TileAtPosition(r, c, t);
         }
         grid.add(tap);
+        player[currentPlayer].refill();
         pass();
     }
 
@@ -82,7 +93,8 @@ public class Game {
      * @param is indexes
      * @return an array of tiles based on player's hand indexes
      */
-    private Tile[] getTiles(int... is) {
+    private Tile[] getTiles(int... is)
+    {
         Tile[] tab = new Tile[is.length];
 
         for (int i = 0; i < tab.length; i++) {
@@ -101,22 +113,32 @@ public class Game {
     }
 
     /**
-     * Return current player's hand
+     * Current player's hand
      *
      * @return List of Tile of the current player's hand
      */
-    public List<Tile> getCurrentPlayerHand() {
+    public List<Tile> getCurrentPlayerHand()
+    {
         return player[currentPlayer].getHand();
     }
 
     /**
      * Switch round to the next player
      */
-    public void pass() {
+    public void pass()
+    {
         if (currentPlayer != player.length - 1) {
             currentPlayer += 1;
         } else {
             currentPlayer = 0;
         }
+    }
+
+    /**
+     * Getter for grid attribute
+     */
+    public GridView getGrid()
+    {
+        return new GridView(grid);
     }
 }

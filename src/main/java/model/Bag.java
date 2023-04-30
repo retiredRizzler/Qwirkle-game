@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Bag represents the bag of tile
  */
-public final class Bag {
+public final class  Bag {
     private static volatile Bag instance = null;
 
     private List<Tile> tiles;
@@ -83,7 +83,7 @@ public final class Bag {
             int randIndex = r.nextInt(tiles.size());
             tempList.add(tiles.get(randIndex));
 
-            // Removing the tile we got from the list, so we don't use a tile more than once
+            // Removing the tile we got from the list, so we don't pick a tile more than once
             tiles.remove(randIndex);
         }
 

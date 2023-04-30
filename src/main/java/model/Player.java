@@ -9,7 +9,6 @@ import java.util.List;
  * Represents a player of the game
  */
 public class Player {
-
     private String name;
     private List<Tile> tiles;
 
@@ -44,7 +43,7 @@ public class Player {
         int missingTilesNb = 6 - tiles.size();
 
         if (missingTilesNb == 0) {
-            throw new QwirkleException("You already has 6 tiles in your hand");
+            return;
         }
         // Refill the hand with missing tiles number
         Tile[] randomTiles = Bag.getInstance().getRandomTiles(missingTilesNb);

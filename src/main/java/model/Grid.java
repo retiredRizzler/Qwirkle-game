@@ -218,9 +218,9 @@ public class Grid {
      */
     private boolean eitherSameShapeOrSameColor(Tile tile0, Tile tile1)
     {
-        return tile0.shape() == tile1.shape()
+        return tile0.shape().equals(tile1.shape())
                 ^
-                tile0.color() == tile1.color();
+                tile0.color().equals(tile1.color());
     }
 
 }
