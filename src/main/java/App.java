@@ -15,33 +15,13 @@ public class App {
         GridView grid = game.getGrid();
 
         View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
-
-        boolean validMove = true;
-        try {
-            playFirst(game);
-        } catch (QwirkleException e) {
-            View.displayError(e.getMessage());
-        }
+        playFirst(game);
         View.displayGrid(grid);
 
         while (true)
         {
             View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
-            try {
-                askCommandToPlayer(game);
-            } catch (QwirkleException e) {
-                View.displayError(e.getMessage());
-                validMove = false;
-            }
-
-            while (!validMove) {
-                try{
-                    askCommandToPlayer(game);
-                } catch (QwirkleException e) {
-                    View.displayError(e.getMessage());
-                }
-
-            }
+            askCommandToPlayer(game);
             View.displayGrid(grid);
         }
 
@@ -49,7 +29,21 @@ public class App {
 
     }
 
-    private static void validCommand 
+    private static void validCommand(Game game, GridView grid)
+    {
+        boolean validCmd = false;
+        while (!validCmd){
+            askCommandToPlayer(game);
+            try {
+                playFirst(game);
+                validCmd = true;
+                View.displayGrid(grid);
+            }catch (QwirkleException e) {
+                View.displayError(e.getMessage());
+            }
+        }
+
+    }
 
     /**
      * Ask the player to input a command to make a move
@@ -57,7 +51,7 @@ public class App {
      */
     private static void askCommandToPlayer(Game game)
     {
-        String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
+        String cmd = readString("Enter a command to make a move ('o', 'l', 'f', 'm', 'p', " +
                 "or whatever if you want to see all the commands) : ");
 
         switch (cmd.toLowerCase().charAt(0))
