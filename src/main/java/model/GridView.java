@@ -1,5 +1,7 @@
 package model;
 
+import view.View;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,9 @@ public class GridView {
 
     public void displayGrid(GridView grid)
     {
+        if (isEmpty()) {
+            return;
+        }
         List<Integer> lR = listRow();
         List<Integer> lC = listCol();
         int beginRow = Collections.min(lR);

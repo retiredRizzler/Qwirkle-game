@@ -15,7 +15,16 @@ public class App {
         GridView grid = game.getGrid();
 
         View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
-        playFirst(game);
+        boolean isValid = false;
+        while (!isValid) {
+            try {
+                playFirst(game);
+                isValid = true;
+            } catch (QwirkleException e) {
+                View.displayError(e.getMessage());
+                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+            }
+        }
         View.displayGrid(grid);
 
         while (true)
@@ -29,53 +38,48 @@ public class App {
 
     }
 
-    private static void validCommand(Game game, GridView grid)
-    {
-        boolean validCmd = false;
-        while (!validCmd){
-            askCommandToPlayer(game);
-            try {
-                playFirst(game);
-                validCmd = true;
-                View.displayGrid(grid);
-            }catch (QwirkleException e) {
-                View.displayError(e.getMessage());
-            }
-        }
-
-    }
-
     /**
-     * Ask the player to input a command to make a move
+     * Ask the player to input a command to make a move and check if the move is valid else ask again to the current
+     * player.
      * @param game Game
      */
     private static void askCommandToPlayer(Game game)
     {
-        String cmd = readString("Enter a command to make a move ('o', 'l', 'f', 'm', 'p', " +
-                "or whatever if you want to see all the commands) : ");
+        boolean isValid = false;
+        while (!isValid) {
+            String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
+                    "or any keys from your keyboard if you want to see all the commands) : ");
+            try {
+                switch (cmd.toLowerCase().charAt(0)) {
+                    case 'o':
+                        playOneTile(game);
+                        break;
 
-        switch (cmd.toLowerCase().charAt(0))
-        {
-            case 'o': playOneTile(game);
-                break;
+                    case 'l':
+                        playSomeTilesOnLine(game);
+                        break;
 
-            case 'l': playSomeTilesOnLine(game);
-                break;
+                    case 'm':
+                        playPlicPloc(game);
+                        break;
 
-            case 'm': playPlicPloc(game);
-                break;
+                    case 'p':
+                        game.pass();
+                        break;
 
-            case 'f': playFirst(game);
-                break;
+                    case 'q':
+                        System.exit(0);
+                        View.display("You left the game :(  See you soon ! ");
+                        break;
 
-            case 'p': game.pass();
-                break;
-
-            case 'q':System.exit(0);
-                break;
-
-            default:
-                View.displayHelp();
+                    default:
+                        View.displayHelp();
+                }
+                isValid = true;
+            } catch (QwirkleException e) {
+                View.displayError(e.getMessage() + " Try again please.");
+                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+            }
         }
     }
 
@@ -230,7 +234,7 @@ public class App {
                 System.out.println("Something is wrong");
                 System.out.println(message);
             }
-            return clavier.nextLine().toLowerCase();
+            return clavier.nextLine();
         }
 
     private static int readInt(String message) {

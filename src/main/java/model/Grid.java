@@ -173,8 +173,8 @@ public class Grid {
                     break;
 
                 if (!eitherSameShapeOrSameColor(tile, nTile)) {
-                    throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
-                            "(or both)");
+                    throw new QwirkleException("Tiles don't match : either not the same shape or not the same color, " +
+                            "or you chose at least two times the same tile. ");
                 }
 
                 nRow += d.getDeltaRow();
