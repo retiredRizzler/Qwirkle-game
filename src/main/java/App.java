@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         View.displayWelcome();
-        View.displayHelp();
 
         List<String> players = enterPlayers();
         Game game = new Game(players);
@@ -26,11 +25,12 @@ public class App {
             }
         }
         View.displayGrid(grid);
+        View.displayHelp();
 
         while (true)
         {
             View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
-            askCommandToPlayer(game);
+            askCommandToPlayer(game, grid);
             View.displayGrid(grid);
         }
 
@@ -43,12 +43,16 @@ public class App {
      * player.
      * @param game Game
      */
-    private static void askCommandToPlayer(Game game)
+    private static void askCommandToPlayer(Game game, GridView grid)
     {
         boolean isValid = false;
         while (!isValid) {
             String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
                     "or any keys from your keyboard if you want to see all the commands) : ");
+            // The string array will automatically ignore the space
+            // String[] cmds = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
+            // "or any keys from your keyboard if you want to see all the commands) : ").split("\\s+");
+
             try {
                 switch (cmd.toLowerCase().charAt(0)) {
                     case 'o':
@@ -72,12 +76,14 @@ public class App {
                         View.display("You left the game :(  See you soon ! ");
                         break;
 
+                    case 'd':
+                        View.displayGrid(grid);
                     default:
                         View.displayHelp();
                 }
                 isValid = true;
             } catch (QwirkleException e) {
-                View.displayError(e.getMessage() + " Try again please.");
+                View.displayError(e.getMessage());
                 View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
             }
         }

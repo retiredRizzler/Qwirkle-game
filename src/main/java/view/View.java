@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static model.Color.*;
+import static model.Direction.*;
+import static model.Shape.*;
 
 /**
  * Represents the view of our game
@@ -38,7 +40,7 @@ public class View {
     public static void displayPlayer(String name, List<Tile> hand)
     {
         System.out.println();
-        System.out.println("It's to \033[1m\033[36m" + name + "\033[0m to play : ");
+        System.out.println("It's to \033[1m\033[36m" + name + " \033[0mto play : ");
         System.out.println();
         int i = 0;
         System.out.print("[");
@@ -62,6 +64,7 @@ public class View {
                         - l : Play severeal tiles on a line
                         - m : Play plic-ploc
                         - p : Skip the round
+                        - d : Display the game board
                         - q : Quit the game
                         - To choose the tile(s) you want to play to have to use the index from your hand.
                         """);
@@ -75,7 +78,7 @@ public class View {
     public static void displayError(String message)
     {
         System.out.println();
-        System.out.println("\033[1m\033[36mA problem occured --->\033[0m " + message + "Try again !");
+        System.out.println("\033[1m\033[36mA problem occured --->\033[0m " + message + " Try again !");
         System.out.println();
     }
 
@@ -86,5 +89,34 @@ public class View {
         System.out.println("===================================================");
 
 
+    }
+
+    public static void main(String[] args) {
+        Grid grid = new Grid();
+        GridView gridView = new GridView(grid);
+        var t1 = new Tile(RED, ROUND);
+        var t2 = new Tile(RED, DIAMOND);
+        var t3 = new Tile(RED, PLUS);
+        grid.firstAdd(UP, t1, t2, t3);
+
+        var t4 = new Tile (RED, SQUARE);
+        var t5 = new Tile (BLUE, SQUARE);
+        var t6 = new Tile (PURPLE, SQUARE);
+        grid.add(46, 45,RIGHT, t4,t5,t6);
+
+        var t7 = new Tile(BLUE, ROUND);
+        grid.add( 45, 46, t7);
+
+        var t8 = new Tile(GREEN, PLUS);
+        var t9 = new Tile(GREEN, DIAMOND);
+        int score0 = grid.add( 43, 44, DOWN, t8,t9);
+
+        var t10 = new TileAtPosition(42, 44, new Tile(GREEN, STAR));
+        var t11 = new TileAtPosition(45, 44, new Tile(GREEN, ROUND));
+        int score = grid.add(t10, t11);
+
+        View.displayGrid(gridView);
+        System.out.println("Score (after adding green plus and green diamond : " + score0);
+        System.out.println("Score (after adding green star and green round) : "+ score);
     }
 }

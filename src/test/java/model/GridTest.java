@@ -3,6 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import view.View;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static model.Color.*;
@@ -33,10 +34,12 @@ class GridTest {
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
         var t3 = new Tile(RED, PLUS);
-        grid.firstAdd(UP, t1, t2, t3);
+        int score = grid.firstAdd(UP, t1, t2, t3);
+
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
         assertEquals(t3, get(grid, -2, 0));
+        assertEquals(3, score);
     }
 
     @Test
@@ -138,14 +141,23 @@ class GridTest {
         var t4 = new Tile (RED, SQUARE);
         var t5 = new Tile (BLUE, SQUARE);
         var t6 = new Tile (PURPLE, SQUARE);
-        add(grid, 1, 0, RIGHT, t4, t5, t6);
 
+        var t7 = new Tile(PURPLE, DIAMOND);
+
+        int score = add(grid, 1, 0, RIGHT, t4, t5, t6);
+        int score1 = add(grid, 2, 2, t7);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
+        System.out.println("Score1 : " + score1);
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
         assertEquals(t3, get(grid, -2, 0));
         assertEquals(t4, get(grid, 1, 0));
         assertEquals(t5, get(grid, 1, 1 ));
         assertEquals(t6, get(grid, 1, 2));
+
+        assertEquals(7, score);
+        assertEquals(2, score1);
     }
 
     @Test
@@ -191,7 +203,9 @@ class GridTest {
 
         var t8 = new Tile(GREEN, PLUS);
         var t9 = new Tile(GREEN, DIAMOND);
-        add(grid, -2, -1, DOWN, t8,t9);
+        int score = add(grid, -2, -1, DOWN, t8,t9);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -226,7 +240,10 @@ class GridTest {
 
         var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
         var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
-        grid.add(t10,t11);
+        int score = grid.add(t10, t11);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
+
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -267,7 +284,7 @@ class GridTest {
 
         var t10 = createTileAtPos(-3, -1, new Tile(GREEN, STAR));
         var t11 = createTileAtPos(0, -1, new Tile(GREEN, ROUND));
-        grid.add(t10,t11);
+        grid.add(t10, t11);
 
         var t12 = new Tile(ORANGE, SQUARE);
         var t13 = new Tile(RED, SQUARE);

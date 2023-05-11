@@ -1,10 +1,10 @@
 package model;
 
 /**
- * model.Grid reprents our game board
+ * model.Grid represents our game board
  */
 public class Grid {
-    private Tile[][] tiles;
+    private final Tile[][] tiles;
     private boolean isEmpty;
 
     public Grid()
@@ -37,27 +37,30 @@ public class Grid {
      * @param d the direction we chose to put our tiles
      * @param line the tile(s) we want to add to the grid
      */
-    public void firstAdd(Direction d, Tile... line)
+    public int firstAdd(Direction d, Tile... line)
     {
         if (!isEmpty()) {
             throw new QwirkleException("The grid is not empty");
         }
 
         if (!tilesMatchEachOther(line)) {
-            throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
-                            "(or both)");
+            throw new QwirkleException("Tiles you pick from your hand don't match : either not the same shape " +
+                    "or not the same color, or you picked two times the same tile or more. ");
         }
 
         int row = tiles.length/2; // 45
         int col = tiles[0].length/2; // 45
         tiles[row][col] = line[0];
+        int nbPoint = 1;
         isEmpty = false;
 
         for (int i = 1; i<line.length; i++) {
                 tiles[row + d.getDeltaRow()] [col + d.getDeltaCol()] = line[i];
+                nbPoint++;
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
             }
+        return nbPoint == 6 ? 12 : nbPoint ;
     }
 
     /**
@@ -66,11 +69,12 @@ public class Grid {
      * @param col the column of the grid
      * @param tile the tile you want to add
      */
-    public void add(int row, int col, Tile tile)
+    public int add(int row, int col, Tile tile)
     {
         if (areRulesValid(row, col, tile)) {
             tiles[row][col] = tile;
         }
+        return score(row, col);
     }
 
     /**
@@ -80,33 +84,131 @@ public class Grid {
      * @param d the direction
      * @param line the tile(s) you want to add
      */
-    public void add(int row, int col, Direction d, Tile... line)
+    public int add(int row, int col, Direction d, Tile... line)
     {
         // Check first if the tiles we want to add match each other
         if (!tilesMatchEachOther(line)) {
-                throw new QwirkleException("Tiles don't match : either not the same shape or not the same color " +
-                        "(or both)");
+                throw new QwirkleException("Tiles you pick from your hand don't match : either not the same shape " +
+                        "or not the same color or you picked two times the same tile or more. ");
         }
+
+        int score = 0;
         for (int i = 0; i<line.length; i++) {
             if(areRulesValid(row, col, line[i])) {
                 tiles[row][col] = line[i];
+                score += score(row, col);
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
             }
         }
+        return score;
     }
 
-    public void add(TileAtPosition... line)
+    public int add(TileAtPosition... line)
     {
         // There is a specific rule about that if we had a tile, and we want to add a second tile or more,
-        // this/these tile(s) must be on the same line (same row or same column).
+        // this/these tile(s) must be on the same line (same row or same column) as the first tile we add.
         if (!areTilesOnSameLine(line)) {
-            throw new QwirkleException("Each tile you want to add must be on the same line");
+            throw new QwirkleException("Each tile you want to add must be on the same line. ");
         }
+
         for (TileAtPosition t : line) {
             add(t.row(), t.col(), t.tile());
         }
 
+        int score = 0;
+        for (int i = 0; i<line.length; i++){
+            int row = line[i].row();
+            int col = line[i].col();
+
+            score += score(line[i].row(), line[i].col());
+        }
+        return score;
+    }
+
+    /**
+     * Calculate the total score from a given position
+     * @param row the initial row
+     * @param col the initial column
+     * @return int, the score number
+     */
+    private int score(int row, int col)
+    {
+        int rowScore = getRowScore(row, col);
+        int colScore = getColScore(row, col);
+
+        // if (rowScore == 1) { rowScore = 0; }
+        // if (colScore == 1) { colScore = 0; }
+
+        return rowScore + colScore;
+    }
+
+    /**
+     * Calculate the tile score from a raw in the grid from a position given in parameter (from left to right).
+     * @param row
+     * @param col
+     * @return int the total of points
+     */
+    private int getRowScore(int row, int col)
+    {
+        Direction[] dir = {Direction.LEFT, Direction.RIGHT};
+        int rowScore = 1;
+        int total = 0;
+        for (Direction d : dir) {
+            int nRow = row + d.getDeltaRow();
+            int nCol = col + d.getDeltaCol();
+            if (tiles[nRow][nCol] != null) {
+                while (isPositionValid(nRow, nCol)) {
+                    if (tiles[nRow][nCol] == null) {break;}
+                    rowScore++;
+                    // If after going on one direction there is already six tiles, it means the player put six tiles
+                    // in a raw (Qwirkle) so no need to check the opposite direction.
+                    if (rowScore == 6) {
+                        return 12;
+                    }
+                    nRow += d.getDeltaRow();
+                    nCol += d.getDeltaCol();
+                }
+                total += rowScore;
+                rowScore = 0;
+            }
+        }
+        // If there is 6 tiles in a raw it is a Qwirkle so the player scores 12 points
+        return total == 6 ? 12 : total;
+    }
+
+    /**
+     * Calculate the score from a column on the grid from a position given in parameter (from up to down).
+     * @param row
+     * @param col
+     * @return int the total score
+     */
+    private int getColScore(int row, int col)
+    {
+        Direction[] dir = {Direction.UP, Direction.DOWN};
+        int colScore = 1;
+        int total = 0;
+        for (Direction d : dir) {
+            int nRow = row + d.getDeltaRow();
+            int nCol = col + d.getDeltaCol();
+            if (tiles[nRow][nCol] != null) {
+                while (isPositionValid(nRow, nCol)) {
+                    if (tiles[nRow][nCol] == null) {break;}
+                    colScore++;
+                    // If after going on one direction there is already six tiles, it means the player put six tiles
+                    // in a raw (Qwirkle) so no need to check the opposite direction.
+                    if (colScore == 6) {
+                        return 12;
+                    }
+                    nRow += d.getDeltaRow();
+                    nCol += d.getDeltaCol();
+                }
+                total += colScore;
+                colScore = 0;
+            }
+        }
+        // If there is 6 tiles in a raw it is a Qwirkle so the player scores 12 points
+        return total == 6 ? 12 : total;
     }
 
     /**
@@ -160,7 +262,7 @@ public class Grid {
             throw new QwirkleException("The positions around the tile aren't occupied by at least one tile");
         }
 
-        Direction dir[] = Direction.values();
+        Direction[] dir = Direction.values();
         for (Direction d : dir) {
 
             int nRow = row + d.getDeltaRow(); // next row
@@ -186,12 +288,13 @@ public class Grid {
     }
 
     /**
-     * Check if the positions around the tile we want to add are free
+     * Check if the positions around the tile we want to add are free; useful to check if it is valid to add a tile
+     * at a specific position on the grid.
      * @return false if there is at least one tile around
      */
     private boolean arePositionsAroundFree(int row, int col)
     {
-        Direction dir[] = Direction.values();
+        Direction[] dir = Direction.values();
         for (Direction d : dir) {
 
             // If at least one position around is occupied by a tile

@@ -45,9 +45,9 @@ public class QwirkleTestUtils {
      * @param col  a column number, with 0 being the center column.
      * @param tile a tile to add.
      */
-    static void add(Grid grid, int row, int col, Tile tile)
+    static int add(Grid grid, int row, int col, Tile tile)
     {
-        grid.add(INITIAL_ROW + row, INITIAL_COLUMN + col, tile);
+        return grid.add(INITIAL_ROW + row, INITIAL_COLUMN + col, tile);
     }
 
 
@@ -63,8 +63,8 @@ public class QwirkleTestUtils {
      * @param d    a direction
      * @param line tiles to add.
      */
-    static void add(Grid grid, int row, int col, Direction d, Tile... line) {
-        grid.add(INITIAL_ROW + row, INITIAL_COLUMN + col, d, line);
+    static int add(Grid grid, int row, int col, Direction d, Tile... line) {
+       return grid.add(INITIAL_ROW + row, INITIAL_COLUMN + col, d, line);
     }
 
 
