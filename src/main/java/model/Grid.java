@@ -93,7 +93,7 @@ public class Grid {
         }
 
         int score = 0;
-        for (int i = 0; i<line.length; i++) {
+        for (int i = 0; i < line.length; i++) {
             if(areRulesValid(row, col, line[i])) {
                 tiles[row][col] = line[i];
                 score += score(row, col);
@@ -118,9 +118,6 @@ public class Grid {
 
         int score = 0;
         for (int i = 0; i<line.length; i++){
-            int row = line[i].row();
-            int col = line[i].col();
-
             score += score(line[i].row(), line[i].col());
         }
         return score;

@@ -10,12 +10,22 @@ import java.util.List;
  */
 public class Player {
     private String name;
+    private int score;
     private List<Tile> tiles;
 
     public Player (String name)
     {
         this.name = name;
         tiles = new ArrayList();
+    }
+
+    /**
+     * Getter for score attribute.
+     * @return the score of a player.
+     */
+    public int getScore()
+    {
+        return score;
     }
 
     /**
@@ -59,5 +69,10 @@ public class Player {
         for (int i = 0; i < ts.length; i++) {
             tiles.remove(ts[i]);
         }
+    }
+
+    public void addScore(int value)
+    {
+        score += value;
     }
 }

@@ -27,7 +27,7 @@ public class GridView {
     public void displayGrid(GridView grid)
     {
         if (isEmpty()) {
-            return;
+            return  ;
         }
         List<Integer> lR = listRow();
         List<Integer> lC = listCol();

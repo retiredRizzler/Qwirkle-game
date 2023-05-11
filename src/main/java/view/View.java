@@ -93,7 +93,6 @@ public class View {
 
     public static void main(String[] args) {
         Grid grid = new Grid();
-        GridView gridView = new GridView(grid);
         var t1 = new Tile(RED, ROUND);
         var t2 = new Tile(RED, DIAMOND);
         var t3 = new Tile(RED, PLUS);
@@ -113,10 +112,14 @@ public class View {
 
         var t10 = new TileAtPosition(42, 44, new Tile(GREEN, STAR));
         var t11 = new TileAtPosition(45, 44, new Tile(GREEN, ROUND));
-        int score = grid.add(t10, t11);
+        int score = grid.add(t10, t11,new TileAtPosition(46 ,44,new Tile(GREEN,SQUARE)),
+                new TileAtPosition(41,44,new Tile(GREEN,CROSS)));
+        score = grid.add(new TileAtPosition(45,47,new Tile(PURPLE,ROUND)),
+                new TileAtPosition(47,47,new Tile(PURPLE,STAR)));
+        score = grid.add(47 ,45 ,Direction.RIGHT,new Tile(RED,STAR),new Tile(BLUE,STAR));
+        score = grid.add(48 ,47 , LEFT, new Tile (PURPLE, CROSS), new Tile(BLUE,CROSS),new Tile(RED,CROSS));
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
 
-        View.displayGrid(gridView);
-        System.out.println("Score (after adding green plus and green diamond : " + score0);
-        System.out.println("Score (after adding green star and green round) : "+ score);
     }
 }

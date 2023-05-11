@@ -28,8 +28,9 @@ public class Game {
      * @param is indexes of list
      */
     public void first(Direction d, int... is)
-    {         grid.firstAdd(d, getTiles(is));
-
+    {
+        int point = grid.firstAdd(d, getTiles(is));
+        player[currentPlayer].addScore(point);
         player[currentPlayer].remove(getTiles(is));
         player[currentPlayer].refill();
         pass();
@@ -44,7 +45,8 @@ public class Game {
      */
     public void play(int row, int col, int index)
     {
-        grid.add(row, col, player[currentPlayer].getHand().get(index));
+        int point = grid.add(row, col, player[currentPlayer].getHand().get(index));
+        player[currentPlayer].addScore(point);
         player[currentPlayer].remove(getTiles(index));
         player[currentPlayer].refill();
         pass();
@@ -60,7 +62,8 @@ public class Game {
      */
     public void play(int row, int col, Direction d, int... indexes)
     {
-        grid.add(row, col, d, getTiles(indexes));
+        int point = grid.add(row, col, d, getTiles(indexes));
+        player[currentPlayer].addScore(point);
         player[currentPlayer].refill();
         pass();
     }
@@ -82,7 +85,8 @@ public class Game {
             Tile t = player[currentPlayer].getHand().get(is[i + 2]);
             tap[i] = new TileAtPosition(r, c, t);
         }
-        grid.add(tap);
+        int point = grid.add(tap);
+        player[currentPlayer].addScore(point);
         player[currentPlayer].refill();
         pass();
     }
@@ -123,6 +127,16 @@ public class Game {
     }
 
     /**
+     *
+     * @return the score of the current player.
+     */
+    public int getCurrentPlayerScore()
+    {
+        return player[currentPlayer].getScore();
+    }
+
+
+    /**
      * Switch round to the next player
      */
     public void pass()
@@ -141,4 +155,5 @@ public class Game {
     {
         return new GridView(grid);
     }
+
 }
