@@ -37,7 +37,7 @@ public class View {
      * @param name the name of the player
      * @param hand the player's hand
      */
-    public static void displayPlayer(String name, List<Tile> hand)
+    public static void displayPlayer(String name, List<Tile> hand, int score)
     {
         System.out.println();
         System.out.println("It's to \033[1m\033[36m" + name + " \033[0mto play : ");
@@ -48,7 +48,7 @@ public class View {
             System.out.print( " " +i+":"+t +" ");
             i++;
         }
-        System.out.print("] ");
+        System.out.print("] " + "Your current score : " + score);
     }
 
     /**
@@ -117,7 +117,7 @@ public class View {
         score = grid.add(new TileAtPosition(45,47,new Tile(PURPLE,ROUND)),
                 new TileAtPosition(47,47,new Tile(PURPLE,STAR)));
         score = grid.add(47 ,45 ,Direction.RIGHT,new Tile(RED,STAR),new Tile(BLUE,STAR));
-        score = grid.add(48 ,47 , LEFT, new Tile (PURPLE, CROSS), new Tile(BLUE,CROSS),new Tile(RED,CROSS));
+        score = grid.add(48 ,47 , LEFT,     new Tile (PURPLE, CROSS), new Tile(BLUE,CROSS),new Tile(RED,CROSS));
         View.displayGrid(new GridView(grid));
         System.out.println("Score : " + score);
 

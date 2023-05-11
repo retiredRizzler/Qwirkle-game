@@ -13,7 +13,7 @@ public class App {
         Game game = new Game(players);
         GridView grid = game.getGrid();
 
-        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
         boolean isValid = false;
         while (!isValid) {
             try {
@@ -21,7 +21,8 @@ public class App {
                 isValid = true;
             } catch (QwirkleException e) {
                 View.displayError(e.getMessage());
-                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                        game.getCurrentPlayerScore());
             }
         }
         View.displayGrid(grid);
@@ -29,7 +30,7 @@ public class App {
 
         while (true)
         {
-            View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+            View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
             askCommandToPlayer(game, grid);
             View.displayGrid(grid);
         }
@@ -84,7 +85,8 @@ public class App {
                 isValid = true;
             } catch (QwirkleException e) {
                 View.displayError(e.getMessage());
-                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand());
+                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                        game.getCurrentPlayerScore());
             }
         }
     }
