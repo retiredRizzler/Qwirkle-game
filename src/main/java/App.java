@@ -28,12 +28,18 @@ public class App {
         View.displayGrid(grid);
         View.displayHelp();
 
-        while (true)
+        System.out.println("Bag : " + Bag.getInstance().size());
+
+
+        while (!game.isOver())
         {
+            game.pass();
             View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
             askCommandToPlayer(game, grid);
             View.displayGrid(grid);
+            System.out.println("Bag : " + Bag.getInstance().size());
         }
+        View.displayEnd(game);
 
 
 
@@ -50,6 +56,10 @@ public class App {
         while (!isValid) {
             String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
                     "or any keys from your keyboard if you want to see all the commands) : ");
+
+            while (cmd.length() == 0) {
+                cmd = readString("Enter a valid command please : ('o', 'l', 'm', 'p', 'd' or 'q'");
+            }
             // The string array will automatically ignore the space
             // String[] cmds = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
             // "or any keys from your keyboard if you want to see all the commands) : ").split("\\s+");

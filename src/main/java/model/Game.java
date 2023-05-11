@@ -33,7 +33,6 @@ public class Game {
         player[currentPlayer].addScore(point);
         player[currentPlayer].remove(getTiles(is));
         player[currentPlayer].refill();
-        pass();
     }
 
     /**
@@ -49,7 +48,6 @@ public class Game {
         player[currentPlayer].addScore(point);
         player[currentPlayer].remove(getTiles(index));
         player[currentPlayer].refill();
-        pass();
     }
 
     /**
@@ -63,9 +61,9 @@ public class Game {
     public void play(int row, int col, Direction d, int... indexes)
     {
         int point = grid.add(row, col, d, getTiles(indexes));
+        player[currentPlayer].remove(getTiles(indexes));
         player[currentPlayer].addScore(point);
         player[currentPlayer].refill();
-        pass();
     }
 
     /**
@@ -86,9 +84,9 @@ public class Game {
             tap[i] = new TileAtPosition(r, c, t);
         }
         int point = grid.add(tap);
+        player[currentPlayer].remove(getTiles(is));
         player[currentPlayer].addScore(point);
         player[currentPlayer].refill();
-        pass();
     }
 
     /**
@@ -156,4 +154,25 @@ public class Game {
         return new GridView(grid);
     }
 
+    /**
+     * Control the end of the game
+     * @return true players the bag is empty and players can't play anymore, or
+     */
+    public boolean isOver()
+    {
+        if (Bag.getInstance().size() != 0) {
+            return false;
+        }
+
+        for (Player p : player) {
+            if (p.getHand().isEmpty()) {
+                p.addScore(6);
+                return true;
+            }
+            if (grid.isPossibleMove(p.getHand())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

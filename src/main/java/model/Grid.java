@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * model.Grid represents our game board
  */
@@ -293,7 +295,9 @@ public class Grid {
     {
         Direction[] dir = Direction.values();
         for (Direction d : dir) {
-
+            if (!isPositionValid(row + d.getDeltaRow(), col + d.getDeltaCol())) {
+                return false;
+            }
             // If at least one position around is occupied by a tile
             if (tiles[row + d.getDeltaRow()] [col + d.getDeltaCol()] != null) {
                 return false;
@@ -321,6 +325,35 @@ public class Grid {
         return tile0.shape().equals(tile1.shape())
                 ^
                 tile0.color().equals(tile1.color());
+    }
+
+    /**
+     * Protected method to use in Game class for isOver method in order to know if a player can't play tiles anymore
+     * @param hand player's hand
+     * @return true if there is one possible move which the player can make.
+     */
+    boolean isPossibleMove(List<Tile> hand)
+    {
+        if (hand.isEmpty()) {
+            return false;
+        }
+        boolean isPossibleMove = false;
+        for (int i = 0; i< tiles.length; i++) {
+            for (int j = 0; j< tiles[0].length; j++) {
+                for (Tile t : hand) {
+                    if (isPositionValid(i, j)) {
+                        break;
+                    }
+                    try {
+                        areRulesValid(i, j, t);
+                        isPossibleMove = true;
+                    } catch (QwirkleException e) {
+                        isPossibleMove = false;
+                    }
+                }
+            }
+        }
+        return isPossibleMove;
     }
 
 }

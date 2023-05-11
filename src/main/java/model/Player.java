@@ -52,11 +52,12 @@ public class Player {
         // In order to know how many tiles we should pick in the bag
         int missingTilesNb = 6 - tiles.size();
 
-        if (missingTilesNb == 0) {
+        if (missingTilesNb == 0 || Bag.getInstance().size() == 0) {
             return;
         }
         // Refill the hand with missing tiles number
         Tile[] randomTiles = Bag.getInstance().getRandomTiles(missingTilesNb);
+        if (randomTiles == null) {return;}
         tiles.addAll(Arrays.stream(randomTiles).toList());
     }
 

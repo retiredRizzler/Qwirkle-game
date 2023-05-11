@@ -69,9 +69,13 @@ public final class  Bag {
      */
     public Tile[] getRandomTiles(int n)
     {
-        if(tiles.isEmpty() || tiles.size() < n)
+        if(tiles.isEmpty())
         {
             return null;
+        }
+
+        if (tiles.size() < n) {
+            n = tiles.size();
         }
 
         Random r = new Random();

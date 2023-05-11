@@ -48,7 +48,7 @@ public class View {
             System.out.print( " " +i+":"+t +" ");
             i++;
         }
-        System.out.print("] " + "Your current score : " + score);
+        System.out.println("] " + "Your current score : " + score);
     }
 
     /**
@@ -89,6 +89,19 @@ public class View {
         System.out.println("===================================================");
 
 
+    }
+
+    /**
+     * Display a end message on the screen with the player who won the game.
+     * @param game
+     */
+    public static void displayEnd(Game game)
+    {
+        System.out.println();
+        System.out.println("Well played to \033[1m\033[36m" + game.getCurrentPlayerName() + " \033[0m. " +
+                "You won the game !");
+        System.out.println();
+        System.out.println("===================================================");
     }
 
     public static void main(String[] args) {
