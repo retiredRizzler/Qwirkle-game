@@ -95,18 +95,31 @@ public class Grid implements Serializable {
                         "or not the same color or you picked two times the same tile or more. ");
         }
 
+        int fRow = row, rRow = row, sRow = row, nRow = row;
+        int fCol = col, rCol = col, sCol = col, nCol = col;
 
-        int fRow = row, rRow = row;
-        int fCol = col, rCol = col;
 
-        int score = 0;
         for (int i = 0; i < line.length; i++) {
             if(areRulesValid(row, col, line[i])) {
                 tiles[row][col] = line[i];
-                score += score(row, col);
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
             }
+        }
+
+        int score= 0;
+        score += score(nRow, nCol);
+        for (int i = 0; i < line.length; i++) {
+            //Checking if a tile have the same row or same column of the first tile, so we don't count several times
+            //the same line in the score.
+            if (nRow == sRow && nCol != sCol) {
+                score += getColScore(nRow, nCol);
+            }
+            if (nCol == sCol && nRow != sRow) {
+                score += getRowScore(nRow, nCol);
+            }
+            nRow += d.getDeltaRow();
+            nCol += d.getDeltaCol();
         }
 
         // Remove all the tiles added in this move if one tile doesn't respect rules.
@@ -148,8 +161,18 @@ public class Grid implements Serializable {
         }
 
         int score = 0;
+        int iRow = line[0].row();
+        int iCol = line[0].col();
+        score += score(iRow, iCol);
         for (int i = 0; i<line.length; i++){
-            score += score(line[i].row(), line[i].col());
+            int nRow = line[i].row();
+            int nCol = line[i].col();
+            if (iRow == nRow && iCol != nCol) {
+                score += getColScore(nRow, nCol);
+            }
+            if (iCol == nCol && iRow != nRow) {
+                score += getRowScore(nRow, nCol);
+            }
         }
         return score;
     }
@@ -202,7 +225,6 @@ public class Grid implements Serializable {
                     }
                 }
             }
-
         return false;
     }
 
@@ -217,10 +239,10 @@ public class Grid implements Serializable {
         int rowScore = getRowScore(row, col);
         int colScore = getColScore(row, col);
 
-        // if (rowScore == 1) { rowScore = 0; }
-        // if (colScore == 1) { colScore = 0; }
+        //if (rowScore == 1) { rowScore = 0; }
+        //if (colScore == 1) { colScore = 0; }
 
-        return rowScore + colScore;
+        return colScore == 0 && rowScore == 0 ? 1 : rowScore + colScore;
     }
 
     /**

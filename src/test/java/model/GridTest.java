@@ -156,8 +156,8 @@ class GridTest {
         assertEquals(t5, get(grid, 1, 1 ));
         assertEquals(t6, get(grid, 1, 2));
 
-        //assertEquals(7, score);
-        //assertEquals(2, score1);
+        assertEquals(7, score);
+        assertEquals(2, score1);
     }
 
     @Test
@@ -174,7 +174,9 @@ class GridTest {
         add(grid, 1, 0,RIGHT, t4,t5,t6);
 
         var t7 = new Tile(BLUE, ROUND);
-        add(grid, 0, 1, t7);
+        int score = add(grid, 0, 1, t7);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -183,6 +185,8 @@ class GridTest {
         assertEquals(t5, get(grid, 1, 1 ));
         assertEquals(t6, get(grid, 1, 2));
         assertEquals(t7, get(grid, 0, 1));
+
+        assertEquals(4, score);
     }
 
     @Test
@@ -216,6 +220,8 @@ class GridTest {
         assertEquals(t7, get(grid, 0, 1));
         assertEquals(t8, get(grid, -2, -1));
         assertEquals(t9, get(grid, -1, -1));
+
+        assertEquals(6, score);
     }
 
     @Test
@@ -232,10 +238,7 @@ class GridTest {
         add(grid, 1, 0,RIGHT, t4,t5,t6);
 
         var t7 = new Tile(BLUE, ROUND);
-        View.displayGrid(new GridView(grid));
         add(grid, 0, 1, t7);
-
-
 
         var t8 = new Tile(GREEN, PLUS);
         var t9 = new Tile(GREEN, DIAMOND);
@@ -263,6 +266,8 @@ class GridTest {
 
         assertEquals(t10.tile(), get(grid, -3, -1));
         assertEquals(t11.tile(), get(grid, 0, -1));
+
+        assertEquals(7, score);
     }
 
     @Test
@@ -291,7 +296,9 @@ class GridTest {
 
         var t12 = new Tile(ORANGE, SQUARE);
         var t13 = new Tile(RED, SQUARE);
-        add(grid, 1, 3, DOWN, t12,t13);
+        int score = add(grid, 1, 3, DOWN, t12,t13);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -311,6 +318,8 @@ class GridTest {
 
         assertEquals(t12, get(grid, 1, 3));
         assertEquals(t13, get(grid, 2, 3));
+
+        assertEquals(6, score);
     }
 
     @Test
@@ -343,7 +352,10 @@ class GridTest {
 
         var t14 = new Tile(YELLOW, STAR);
         var t15 = new Tile(ORANGE, STAR);
-        add(grid, -3, -2, LEFT, t14,t15);
+        int score = add(grid, -3, -2, LEFT, t14,t15);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
+        assertEquals(3, score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -402,7 +414,10 @@ class GridTest {
 
         var t16 = new Tile(ORANGE, CROSS);
         var t17 = new Tile(ORANGE, DIAMOND);
-        add(grid, -2, -3, DOWN, t16,t17);
+        int score = add(grid, -2, -3, DOWN, t16,t17);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
+        assertEquals(3, score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
