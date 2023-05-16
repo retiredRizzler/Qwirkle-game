@@ -1,9 +1,10 @@
 package model;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Game implements Serializable {
     private Grid grid;
     private Player[] player;
     private int currentPlayer;
@@ -74,17 +75,19 @@ public class Game {
      */
     public void play(int... is)
     {
-        TileAtPosition[] tap = new TileAtPosition[is.length];
+        TileAtPosition[] tap = new TileAtPosition[is.length/3];
+        int j = 0;
         // In this for loop we have to iterate it only with multiple of 3 because every 3 indexes we have a new
         // TileAtPosition object.
         for (int i = 0; i < is.length; i += 3) {
             int r = is[i];
             int c = is[i + 1];
             Tile t = player[currentPlayer].getHand().get(is[i + 2]);
-            tap[i] = new TileAtPosition(r, c, t);
+            tap[j] = new TileAtPosition(r, c, t);
+            j++;
         }
         int point = grid.add(tap);
-        player[currentPlayer].remove(getTiles(is));
+        player[currentPlayer].remove(getTilesTAP(is));
         player[currentPlayer].addScore(point);
         player[currentPlayer].refill();
     }
@@ -100,6 +103,23 @@ public class Game {
         Tile[] tab = new Tile[is.length];
 
         for (int i = 0; i < tab.length; i++) {
+            tab[i] = player[currentPlayer].getHand().get(is[i]);
+        }
+        return tab;
+    }
+
+    /**
+     * Create an array of tiles based on the indexes of the player's hand with an int varargs in argument for
+     * metthod play(int...) -> TileAtPosition.
+     * @param is indexes
+     * @return an array of tiles based on player's hand indexes
+     */
+    private Tile[] getTilesTAP(int... is)
+    {
+        Tile[] tab = new Tile[is.length];
+
+        // Loop start iterate at index 3 of the is length
+        for (int i = 2; i < tab.length; i+=3) {
             tab[i] = player[currentPlayer].getHand().get(is[i]);
         }
         return tab;
@@ -174,5 +194,51 @@ public class Game {
             }
         }
         return false;
+    }
+
+    /**
+     * Write the game passed in argument in a file and serialize it.
+     * @param fileName the name of the file
+     */
+    public void write(String fileName)
+    {
+        try {
+            FileOutputStream file = new FileOutputStream(fileName.concat(".ser"));
+            ObjectOutputStream out  = new ObjectOutputStream(file);
+
+            out.writeObject(this);
+            out.writeObject(Bag.getInstance());
+            out.close();
+            file.close();
+
+        } catch (IOException e) {
+            throw new QwirkleException(e.getMessage());
+        }
+    }
+
+    /**
+     * Deserialize the Game object to get from the file and return it
+     * @param fileName the name of the file to get
+     * @return instance of a game from the file
+     */
+    public static Game getFromFile(String fileName)
+    {
+        Game game;
+        Bag bag;
+
+        try {
+            FileInputStream file = new FileInputStream(fileName.concat(".ser"));
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            game = (Game)in.readObject();
+            bag = (Bag)in.readObject();
+            bag.getCurrentInstanceBag(bag);
+            in.close();
+            file.close();
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new QwirkleException(e.getMessage());
+        }
+        return game;
     }
 }

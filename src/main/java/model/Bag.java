@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Random;
 /**
  * Bag represents the bag of tile
  */
-public final class  Bag {
+public final class  Bag implements Serializable {
     private static volatile Bag instance = null;
 
     private List<Tile> tiles;
@@ -53,6 +55,12 @@ public final class  Bag {
         }
         return Bag.instance;
     }
+
+    void getCurrentInstanceBag(Bag bag)
+    {
+        instance = bag;
+    }
+
 
     /**
      * Return the size of our bag (to make the tests easier)

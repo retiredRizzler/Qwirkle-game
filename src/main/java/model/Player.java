@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Represents a player of the game
  */
-public class Player {
+public class Player implements Serializable {
     private String name;
     private int score;
     private List<Tile> tiles;

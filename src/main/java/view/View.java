@@ -65,9 +65,41 @@ public class View {
                         - m : Play plic-ploc
                         - p : Skip the round
                         - d : Display the game board
+                        - r : Display the rules of Qwirkle
+                        - s : Save the current game              
                         - q : Quit the game
                         - To choose the tile(s) you want to play to have to use the index from your hand.
                         """);
+        System.out.println();
+    }
+
+    /**
+     *Display the rules of the Qwirkle game.
+     */
+    public static void displayRules()
+    {
+        System.out.println();
+        String[] RULES = {
+                "----- Qwirkle Game Rules -----",
+                "Qwirkle is a tile-based game played with 108 tiles.",
+                "The tiles are divided into six different shapes in six different colors.",
+                "The goal of the game is to score points by creating lines of tiles that share either a shape or a color.",
+                "Here are the rules for playing Qwirkle:",
+                "1. Players take turns placing tiles on a game board.",
+                "2. A line can be created either horizontally or vertically.",
+                "3. A line can consist of one or more tiles.",
+                "4. A line can only contain tiles that share either the same shape or the same color, but not both.",
+                "5. Once a line is created, the player scores one point for each tile in the line.",
+                "6. After scoring, the player replenishes their hand by drawing tiles from the bag.",
+                "7. If a player completes a line of six tiles (a Qwirkle), they score a bonus of 6 points.",
+                "8. The game continues until the bag is empty and one player has placed all their tiles.",
+                "9. The player with the highest score at the end of the game wins.",
+                "-------------------------------"
+        };
+
+        for (String rule : RULES) {
+            System.out.println(rule);
+        }
         System.out.println();
     }
 
@@ -99,7 +131,7 @@ public class View {
     {
         System.out.println();
         System.out.println("Well played to \033[1m\033[36m" + game.getCurrentPlayerName() + " \033[0m. " +
-                "You won the game !");
+                "You won the game with a score of " + game.getCurrentPlayerScore()+ " !");
         System.out.println();
         System.out.println("===================================================");
     }

@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Color represents color of a tile
  */
-public enum Color {
+public enum Color implements Serializable {
     BLUE("\033[34m"), RED("\033[31m"), GREEN("\033[32m"), ORANGE("\033[38;5;214m"),
     YELLOW("\033[38;5;227m"), PURPLE("\033[35m");
 

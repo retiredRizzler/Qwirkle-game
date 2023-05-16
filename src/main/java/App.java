@@ -8,41 +8,58 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         View.displayWelcome();
+        Game game = null;
+        GridView grid = null;
+        String ans = readString("\nDo you want to load your last game back up ? Type yes (y) or something else to start "
+                + "a new game.");
 
-        List<String> players = enterPlayers();
-        Game game = new Game(players);
-        GridView grid = game.getGrid();
-
-        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
-        boolean isValid = false;
-        while (!isValid) {
-            try {
-                playFirst(game);
-                isValid = true;
-            } catch (QwirkleException e) {
-                View.displayError(e.getMessage());
-                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
-                        game.getCurrentPlayerScore());
-            }
+        if (ans.toLowerCase().charAt(0) == 'y') {
+            if (Game.getFromFile("gameSaved") != null) {
+                game = Game.getFromFile("gameSaved");
+                grid = game.getGrid();
+                View.display("\nYour last game back up was loaded successfully.");
+                View.displayGrid(grid);
+                View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
+            } else View.display("\nYou have no saved game to load, starting a new game...");
         }
-        View.displayGrid(grid);
-        View.displayHelp();
 
-        System.out.println("Bag : " + Bag.getInstance().size());
+        else {
+            List<String> players = enterPlayers();
+            View.displayRules();
+            game = new Game(players);
+            grid = game.getGrid();
 
+            View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
+            boolean isValid = false;
+            while (!isValid) {
+                try {
+                    playFirst(game);
+                    game.pass();
+                    isValid = true;
+                } catch (QwirkleException e) {
+                    View.displayError(e.getMessage());
+                    View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                            game.getCurrentPlayerScore());
+                }
+            }
+            View.displayHelp();
+            View.displayGrid(grid);
+
+
+            View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
+        }
+        
 
         while (!game.isOver())
         {
-            game.pass();
             View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
             askCommandToPlayer(game, grid);
             View.displayGrid(grid);
-            System.out.println("Bag : " + Bag.getInstance().size());
+            View.display("Bag : " + Bag.getInstance().size() + " tiles left.");
+            game.pass();
         }
+
         View.displayEnd(game);
-
-
-
     }
 
     /**
@@ -54,49 +71,52 @@ public class App {
     {
         boolean isValid = false;
         while (!isValid) {
+
+            try {
+
             String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
                     "or any keys from your keyboard if you want to see all the commands) : ");
 
-            while (cmd.length() == 0) {
-                cmd = readString("Enter a valid command please : ('o', 'l', 'm', 'p', 'd' or 'q'");
-            }
             // The string array will automatically ignore the space
             // String[] cmds = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
             // "or any keys from your keyboard if you want to see all the commands) : ").split("\\s+");
 
-            try {
+
                 switch (cmd.toLowerCase().charAt(0)) {
-                    case 'o':
-                        playOneTile(game);
-                        break;
-
-                    case 'l':
-                        playSomeTilesOnLine(game);
-                        break;
-
-                    case 'm':
-                        playPlicPloc(game);
-                        break;
-
-                    case 'p':
+                    case 'o' -> playOneTile(game);
+                    case 'l' -> playSomeTilesOnLine(game);
+                    case 'm' -> playPlicPloc(game);
+                    case 'p' -> {
                         game.pass();
-                        break;
-
-                    case 'q':
+                        game.pass(); // we add a second game.pass() cause in the while(!isGameOver) in the main
+                                    // we already use a game.pass()
+                    }
+                    case 'q' -> {
                         System.exit(0);
                         View.display("You left the game :(  See you soon ! ");
-                        break;
-
-                    case 'd':
-                        View.displayGrid(grid);
-                    default:
+                    }
+                    case 'd' -> View.displayGrid(grid);
+                    case 'r' -> View.displayRules();
+                    case 's' -> {
+                        game.write("gameSaved");
+                        View.display("\nGame has been saved successfully !");
+                        askCommandToPlayer(game, grid);
+                    }
+                    default -> {
                         View.displayHelp();
+                        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                                game.getCurrentPlayerScore());
+                        askCommandToPlayer(game, grid);
+                    }
                 }
+
                 isValid = true;
             } catch (QwirkleException e) {
                 View.displayError(e.getMessage());
                 View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
                         game.getCurrentPlayerScore());
+            } catch (StringIndexOutOfBoundsException e) {
+                View.displayError("Enter a valid command please : ");
             }
         }
     }
@@ -107,8 +127,20 @@ public class App {
      */
     private static void playPlicPloc(Game game)
     {
-        int[] indexes = enterTiles();
-        game.play(indexes);
+        int tiles = readInt("How many tiles do you want to play ?");
+        int[] tab = new int[tiles*3];
+        int i = 1;
+        for (int j =0; j < tab.length; j+=3) {
+            tab[j] = readInt("Please enter the row of the tile " + (i) +
+                        " from your hand that you want to play : ");
+            tab[j+1] = readInt("Please enter the column of the tile " + (i) +
+                        " from your hand that you want to play : ");
+            tab[j+2] = readInt("Enter the index of the tile " + (i) +
+                        " from your hand that you want to play : ");
+            i++;
+        }
+        game.play(tab);
+
     }
 
     /**
@@ -246,13 +278,16 @@ public class App {
 
         private static String readString(String message) {
             Scanner clavier = new Scanner(System.in);
+            String ans = "null";
             System.out.println(message);
-            while (!clavier.hasNextLine()) {
-                clavier.next();
-                System.out.println("Something is wrong");
+            ans = clavier.next();
+            while (!clavier.hasNextLine() || ans.equals("null")) {
+                System.out.println("Something is wrong, try again please.");
                 System.out.println(message);
+                ans = clavier.next();
+
             }
-            return clavier.nextLine();
+            return ans;
         }
 
     private static int readInt(String message) {

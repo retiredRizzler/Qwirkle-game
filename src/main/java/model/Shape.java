@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Shape represents the shape of a tile
  */
-public enum Shape {
+public enum Shape implements Serializable {
     CROSS("x"), SQUARE("■"), ROUND("●"), STAR("*"), PLUS("+"), DIAMOND("◆");
 
     private String shape;

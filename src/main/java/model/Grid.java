@@ -1,11 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * model.Grid represents our game board
  */
-public class Grid {
+public class Grid implements Serializable {
     private final Tile[][] tiles;
     private boolean isEmpty;
 
@@ -90,9 +91,13 @@ public class Grid {
     {
         // Check first if the tiles we want to add match each other
         if (!tilesMatchEachOther(line)) {
-                throw new QwirkleException("Tiles you pick from your hand don't match : either not the same shape " +
+                throw new QwirkleException("Tiles you picked from your hand don't match : either not the same shape " +
                         "or not the same color or you picked two times the same tile or more. ");
         }
+
+
+        int fRow = row, rRow = row;
+        int fCol = col, rCol = col;
 
         int score = 0;
         for (int i = 0; i < line.length; i++) {
@@ -103,6 +108,20 @@ public class Grid {
                 col += d.getDeltaCol();
             }
         }
+
+        // Remove all the tiles added in this move if one tile doesn't respect rules.
+        for (int i = 0; i < line.length; i++) {
+            if (get(fRow, fCol) == null) {
+                for (int j = 0; j < line.length; j++) {
+                    tiles[rRow][rCol] = null;
+                    rRow += d.getDeltaRow();
+                    rCol += d.getDeltaCol();
+                }
+                throw new QwirkleException("One (or more) of your tile you added did not respect the rules. ");
+            }
+            fRow += d.getDeltaRow();
+            fCol += d.getDeltaCol();
+        }
         return score;
     }
 
@@ -111,11 +130,21 @@ public class Grid {
         // There is a specific rule about that if we had a tile, and we want to add a second tile or more,
         // this/these tile(s) must be on the same line (same row or same column) as the first tile we add.
         if (!areTilesOnSameLine(line)) {
-            throw new QwirkleException("Each tile you want to add must be on the same line. ");
+           throw new QwirkleException("Each tile you want to add must be on the same line. ");
         }
 
         for (TileAtPosition t : line) {
             add(t.row(), t.col(), t.tile());
+        }
+
+        // Remove all the tiles added in this move if one tile doesn't respect rules.
+        for (TileAtPosition t : line) {
+            if (get(t.row(), t.col()) == null) {
+                for (TileAtPosition tap : line) {
+                    tiles[tap.row()][tap.col()] = null;
+                }
+                throw new QwirkleException("One (or more) of your tile you added did not respect the rules. ");
+            }
         }
 
         int score = 0;
@@ -123,6 +152,58 @@ public class Grid {
             score += score(line[i].row(), line[i].col());
         }
         return score;
+    }
+
+    /**
+     * Check if there is at least two same tiles on the same row or column given in argument.
+     * @param row
+     * @param col
+     * @return true if a same tile as the tile in argument is found.
+     */
+    private boolean sameTilesOnSameLine(int row, int col)
+    {
+            if (tiles[row][col + 1] != null && tiles[row][col - 1] != null) {
+
+                for (int j = 0; j < tiles[0].length; j++) {
+                    if(tiles[row][j] != null) {
+                        Tile rowTile = tiles[row][j];
+                        // Check for same tile in the same row
+                        int countRow = 0;
+                        for (int c = 0; c < tiles[0].length; c++) {
+                            if(tiles[row][c] != null) {
+                                if (!eitherSameShapeOrSameColor(tiles[row][c], rowTile)) {
+                                    countRow++;
+                                    if (countRow >= 2) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (tiles[row + 1][col] != null && tiles[row - 1][col] != null) {
+                for (int i = 0; i < tiles.length; i++) {
+                    if (tiles[i][col] != null) {
+                        Tile colTile = tiles[i][col];
+                        // Check for same tile in the same column
+                        int countCol = 0;
+                        for (int r = 0; r < tiles.length; r++) {
+                            if (tiles[r][col] != null) {
+                                if (eitherSameShapeOrSameColor(tiles[r][col], colTile)) {
+                                    countCol++;
+                                    if (countCol >= 2) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        return false;
     }
 
     /**
@@ -257,6 +338,11 @@ public class Grid {
             throw new QwirkleException("The position is already occupied by a tile");
         }
 
+        if(sameTilesOnSameLine(row, col)) {
+            tiles[row][col] = null;
+            throw new QwirkleException("There are 2 times the same tile (or more) on the same line. ");
+        }
+
         if(arePositionsAroundFree(row, col)){
             throw new QwirkleException("The positions around the tile aren't occupied by at least one tile");
         }
@@ -294,9 +380,10 @@ public class Grid {
     private boolean arePositionsAroundFree(int row, int col)
     {
         Direction[] dir = Direction.values();
+
         for (Direction d : dir) {
             if (!isPositionValid(row + d.getDeltaRow(), col + d.getDeltaCol())) {
-                return false;
+                continue;
             }
             // If at least one position around is occupied by a tile
             if (tiles[row + d.getDeltaRow()] [col + d.getDeltaCol()] != null) {
@@ -312,9 +399,9 @@ public class Grid {
      */
     private boolean isPositionValid (int row, int col)
     {
-        return row >= 0 && row <= tiles.length
+        return row >= 0 && row < tiles.length
                 &&
-                col >= 0 && col <= tiles.length;
+                col >= 0 && col < tiles.length;
     }
 
     /**
@@ -337,23 +424,19 @@ public class Grid {
         if (hand.isEmpty()) {
             return false;
         }
-        boolean isPossibleMove = false;
+
         for (int i = 0; i< tiles.length; i++) {
             for (int j = 0; j< tiles[0].length; j++) {
+                if (arePositionsAroundFree(i, j)) {continue;}
                 for (Tile t : hand) {
-                    if (isPositionValid(i, j)) {
-                        break;
-                    }
                     try {
                         areRulesValid(i, j, t);
-                        isPossibleMove = true;
-                    } catch (QwirkleException e) {
-                        isPossibleMove = false;
-                    }
+                        return true;
+                    } catch (QwirkleException e) {}
                 }
             }
         }
-        return isPossibleMove;
+        return false;
     }
 
 }
