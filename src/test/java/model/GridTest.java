@@ -483,7 +483,11 @@ class GridTest {
 
         var t18 = new Tile(YELLOW, DIAMOND);
         var t19 = new Tile(YELLOW, ROUND);
-        add(grid, -1, -2, DOWN, t18,t19);
+        int score = add(grid, -1, -2, DOWN, t18,t19);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
+        assertEquals(10, score);
+
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));
@@ -556,7 +560,9 @@ class GridTest {
         add(grid, -1, -2, DOWN, t18,t19);
 
         var t20 = new Tile(RED, STAR);
-        add(grid, -3, 0, t20);
+        int score = add(grid, -3, 0, t20);
+        View.displayGrid(new GridView(grid));
+        System.out.println("Score : " + score);
 
         assertEquals(t1, get(grid, 0, 0));
         assertEquals(t2, get(grid, -1, 0));

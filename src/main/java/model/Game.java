@@ -93,8 +93,7 @@ public class Game implements Serializable {
     }
 
     /**
-     * Create an array of tiles based on the indexes of the player's hand with an int varargs in argument
-     *
+     * Create an array of tiles based on the indexes of the player's hand with an int varargs in argument.
      * @param is indexes
      * @return an array of tiles based on player's hand indexes
      */
@@ -110,7 +109,7 @@ public class Game implements Serializable {
 
     /**
      * Create an array of tiles based on the indexes of the player's hand with an int varargs in argument for
-     * metthod play(int...) -> TileAtPosition.
+     * method play(int...) -> TileAtPosition.
      * @param is indexes
      * @return an array of tiles based on player's hand indexes
      */

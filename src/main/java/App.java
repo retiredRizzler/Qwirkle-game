@@ -95,8 +95,6 @@ public class App {
                         System.exit(0);
                         View.display("You left the game :(  See you soon ! ");
                     }
-                    case 'd' -> View.displayGrid(grid);
-                    case 'r' -> View.displayRules();
                     case 's' -> {
                         game.write("gameSaved");
                         View.display("\nGame has been saved successfully !");
@@ -109,7 +107,6 @@ public class App {
                         askCommandToPlayer(game, grid);
                     }
                 }
-
                 isValid = true;
             } catch (QwirkleException e) {
                 View.displayError(e.getMessage());

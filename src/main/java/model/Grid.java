@@ -1,5 +1,7 @@
 package model;
 
+import view.View;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -97,17 +99,31 @@ public class Grid implements Serializable {
 
         int fRow = row, rRow = row, sRow = row, nRow = row;
         int fCol = col, rCol = col, sCol = col, nCol = col;
+        int score= 0;
 
-
-        for (int i = 0; i < line.length; i++) {
-            if(areRulesValid(row, col, line[i])) {
+        try {
+            for (int i = 0; i < line.length; i++) {
+                areRulesValid(row, col, line[i]);
                 tiles[row][col] = line[i];
                 row += d.getDeltaRow();
                 col += d.getDeltaCol();
+                }
+            } catch (QwirkleException e) {
+            // Remove all the tiles added in this move if one tile doesn't respect rules.
+            for (int i = 0; i < line.length; i++) {
+                if (get(fRow, fCol) == null) {
+                    for (int j = 0; j < line.length; j++) {
+                        tiles[rRow][rCol] = null;
+                        rRow += d.getDeltaRow();
+                        rCol += d.getDeltaCol();
+                    }
+                }
+                fRow += d.getDeltaRow();
+                fCol += d.getDeltaCol();
             }
+            throw new QwirkleException(e.getMessage());
         }
 
-        int score= 0;
         score += score(nRow, nCol);
         for (int i = 0; i < line.length; i++) {
             //Checking if a tile have the same row or same column of the first tile, so we don't count several times
@@ -121,46 +137,33 @@ public class Grid implements Serializable {
             nRow += d.getDeltaRow();
             nCol += d.getDeltaCol();
         }
-
-        // Remove all the tiles added in this move if one tile doesn't respect rules.
-        for (int i = 0; i < line.length; i++) {
-            if (get(fRow, fCol) == null) {
-                for (int j = 0; j < line.length; j++) {
-                    tiles[rRow][rCol] = null;
-                    rRow += d.getDeltaRow();
-                    rCol += d.getDeltaCol();
-                }
-                throw new QwirkleException("One (or more) of your tile you added did not respect the rules. ");
-            }
-            fRow += d.getDeltaRow();
-            fCol += d.getDeltaCol();
-        }
         return score;
     }
 
     public int add(TileAtPosition... line)
     {
+        int score = 0;
         // There is a specific rule about that if we had a tile, and we want to add a second tile or more,
         // this/these tile(s) must be on the same line (same row or same column) as the first tile we add.
         if (!areTilesOnSameLine(line)) {
            throw new QwirkleException("Each tile you want to add must be on the same line. ");
         }
-
-        for (TileAtPosition t : line) {
-            add(t.row(), t.col(), t.tile());
-        }
-
-        // Remove all the tiles added in this move if one tile doesn't respect rules.
-        for (TileAtPosition t : line) {
-            if (get(t.row(), t.col()) == null) {
-                for (TileAtPosition tap : line) {
-                    tiles[tap.row()][tap.col()] = null;
-                }
-                throw new QwirkleException("One (or more) of your tile you added did not respect the rules. ");
+        try {
+            for (TileAtPosition t : line) {
+                add(t.row(), t.col(), t.tile());
             }
+        } catch (QwirkleException e) {
+            // Remove all the tiles added in this move if one tile doesn't respect rules.
+            for (TileAtPosition t : line) {
+                if (get(t.row(), t.col()) == null) {
+                    for (TileAtPosition tap : line) {
+                        tiles[tap.row()][tap.col()] = null;
+                    }
+                }
+            }
+            throw new QwirkleException(e.getMessage());
         }
 
-        int score = 0;
         int iRow = line[0].row();
         int iCol = line[0].col();
         score += score(iRow, iCol);
@@ -238,9 +241,6 @@ public class Grid implements Serializable {
     {
         int rowScore = getRowScore(row, col);
         int colScore = getColScore(row, col);
-
-        //if (rowScore == 1) { rowScore = 0; }
-        //if (colScore == 1) { colScore = 0; }
 
         return colScore == 0 && rowScore == 0 ? 1 : rowScore + colScore;
     }

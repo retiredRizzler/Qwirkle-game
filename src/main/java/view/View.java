@@ -64,9 +64,7 @@ public class View {
                         - l : Play severeal tiles on a line
                         - m : Play plic-ploc
                         - p : Skip the round
-                        - d : Display the game board
-                        - r : Display the rules of Qwirkle
-                        - s : Save the current game              
+                        - s : Save the current game            
                         - q : Quit the game
                         - To choose the tile(s) you want to play to have to use the index from your hand.
                         """);
