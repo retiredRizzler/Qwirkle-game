@@ -8,23 +8,54 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         View.displayWelcome();
-        Game game = null;
-        GridView grid = null;
+        Game game;
+        GridView grid;
+        List<String> players;
+
         String ans = readString("\nDo you want to load your last game back up ? Type yes (y) or something else to start "
                 + "a new game.");
 
         if (ans.toLowerCase().charAt(0) == 'y') {
-            if (Game.getFromFile("gameSaved") != null) {
+            try {
                 game = Game.getFromFile("gameSaved");
                 grid = game.getGrid();
                 View.display("\nYour last game back up was loaded successfully.");
                 View.displayGrid(grid);
                 View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
-            } else View.display("\nYou have no saved game to load, starting a new game...");
-        }
 
+            } catch (Exception e) {
+                View.displayError(e.getMessage());
+                View.display("\nYou have no saved game to load, starting a new game...");
+                players = enterPlayers();
+                View.displayRules();
+                game = new Game(players);
+                grid = game.getGrid();
+
+                View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(), game.getCurrentPlayerScore());
+                boolean isValid = false;
+                while (!isValid) {
+                    try {
+                        playFirst(game);
+                        game.pass();
+                        isValid = true;
+                    } catch (QwirkleException q) {
+                        View.displayError(q.getMessage());
+                        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                                game.getCurrentPlayerScore());
+                    }
+                }
+                View.displayHelp();
+                View.displayGrid(grid);
+
+
+                View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
+            }
+        }
+        // Here we're using two times the same code, but sadly we can't put it in a private method because the instance
+        // of the Game would have been null when entering the loop while(!game.IsOver()). So we have in this specific case
+        // we have to re-use the same code instead of factorising it.
         else {
-            List<String> players = enterPlayers();
+            players = enterPlayers();
             View.displayRules();
             game = new Game(players);
             grid = game.getGrid();
@@ -48,7 +79,7 @@ public class App {
 
             View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
         }
-        
+        View.displayEnd(game);
 
         while (!game.isOver())
         {
@@ -73,27 +104,37 @@ public class App {
         while (!isValid) {
 
             try {
-
             String cmd = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
-                    "or any keys from your keyboard if you want to see all the commands) : ");
-
+                    "or any keys from your keyboard if you want to see all the commands in details) : ");
             // The string array will automatically ignore the space
             // String[] cmds = readString("Enter a command to make a move ('o', 'l', 'm', 'p', " +
             // "or any keys from your keyboard if you want to see all the commands) : ").split("\\s+");
-
-
                 switch (cmd.toLowerCase().charAt(0)) {
                     case 'o' -> playOneTile(game);
                     case 'l' -> playSomeTilesOnLine(game);
                     case 'm' -> playPlicPloc(game);
+                    case 'd' -> {
+                        View.displayGrid(grid);
+                        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                                game.getCurrentPlayerScore());
+                        askCommandToPlayer(game, grid);
+                    }
+                    case 'r' -> {
+                        View.displayRules();
+                        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                                game.getCurrentPlayerScore());
+                        askCommandToPlayer(game, grid);
+                    }
                     case 'p' -> {
                         game.pass();
-                        game.pass(); // we add a second game.pass() cause in the while(!isGameOver) in the main
-                                    // we already use a game.pass()
+                        View.displayGrid(grid);
+                        View.displayPlayer(game.getCurrentPlayerName(), game.getCurrentPlayerHand(),
+                                game.getCurrentPlayerScore());
+                        askCommandToPlayer(game, grid);
                     }
                     case 'q' -> {
-                        System.exit(0);
                         View.display("You left the game :(  See you soon ! ");
+                        System.exit(0);
                     }
                     case 's' -> {
                         game.write("gameSaved");
@@ -128,11 +169,11 @@ public class App {
         int[] tab = new int[tiles*3];
         int i = 1;
         for (int j =0; j < tab.length; j+=3) {
-            tab[j] = readInt("Please enter the row of the tile " + (i) +
+            tab[j] = readInt("Please enter the row of the tile " + i +
                         " from your hand that you want to play : ");
-            tab[j+1] = readInt("Please enter the column of the tile " + (i) +
+            tab[j+1] = readInt("Please enter the column of the tile " + i +
                         " from your hand that you want to play : ");
-            tab[j+2] = readInt("Enter the index of the tile " + (i) +
+            tab[j+2] = readInt("Enter the index of the tile " + i +
                         " from your hand that you want to play : ");
             i++;
         }
@@ -273,21 +314,33 @@ public class App {
         return players;
     }
 
-        private static String readString(String message) {
-            Scanner clavier = new Scanner(System.in);
-            String ans = "null";
+    /**
+     * Robust method to ask a String to the user
+     * @param message the message to display when asking
+     * @return String, the user input
+     */
+    private static String readString(String message)
+    {
+        Scanner clavier = new Scanner(System.in);
+        String ans = "null";
+        System.out.println(message);
+        ans = clavier.next();
+        while (!clavier.hasNextLine() || ans.equals("null")) {
+            System.out.println("Something is wrong, try again please.");
             System.out.println(message);
             ans = clavier.next();
-            while (!clavier.hasNextLine() || ans.equals("null")) {
-                System.out.println("Something is wrong, try again please.");
-                System.out.println(message);
-                ans = clavier.next();
 
-            }
-            return ans;
         }
+        return ans;
+    }
 
-    private static int readInt(String message) {
+    /**
+     * Robust method to ask an int to the user
+     * @param message the message to display when asking
+     * @return int, the user input
+     */
+    private static int readInt(String message)
+    {
         Scanner clavier = new Scanner(System.in);
         System.out.println(message);
         while (!clavier.hasNextInt()) {
@@ -298,7 +351,13 @@ public class App {
         return clavier.nextInt();
     }
 
-    private static int readIntMinMax(String message, int min, int max) {
+    /**
+     * Robust method to ask the user an int between to integer
+     * @param message the message to display when asking
+     * @return int, the user input
+     */
+    private static int readIntMinMax(String message, int min, int max)
+    {
         if (min > max) {
             throw new IllegalArgumentException("Minimum is higher than maximum " + min + " " + max);
         }
@@ -310,4 +369,5 @@ public class App {
         }
         return entier;
     }
+
 }

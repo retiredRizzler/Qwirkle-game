@@ -94,6 +94,7 @@ public class Game implements Serializable {
 
     /**
      * Create an array of tiles based on the indexes of the player's hand with an int varargs in argument.
+     * for method play(int row, int col, Direction d, int... indexes).
      * @param is indexes
      * @return an array of tiles based on player's hand indexes
      */
@@ -183,12 +184,15 @@ public class Game implements Serializable {
             return false;
         }
 
-        for (Player p : player) {
+        for (int i = 0; i < player.length; i++ ) {
+            Player p = player[i];
             if (p.getHand().isEmpty()) {
                 p.addScore(6);
+                currentPlayer = i;
                 return true;
             }
             if (grid.isPossibleMove(p.getHand())) {
+                currentPlayer = i;
                 return true;
             }
         }

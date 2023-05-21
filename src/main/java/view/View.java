@@ -64,7 +64,9 @@ public class View {
                         - l : Play severeal tiles on a line
                         - m : Play plic-ploc
                         - p : Skip the round
-                        - s : Save the current game            
+                        - d : display the game board
+                        - r : display the rules of Qwirkle
+                        - s : Save the current game
                         - q : Quit the game
                         - To choose the tile(s) you want to play to have to use the index from your hand.
                         """);
@@ -127,42 +129,14 @@ public class View {
      */
     public static void displayEnd(Game game)
     {
+        String playerName = game.getCurrentPlayerName();
+        int playerScore = game.getCurrentPlayerScore();
+
         System.out.println();
-        System.out.println("Well played to \033[1m\033[36m" + game.getCurrentPlayerName() + " \033[0m. " +
-                "You won the game with a score of " + game.getCurrentPlayerScore()+ " !");
-        System.out.println();
-        System.out.println("===================================================");
-    }
-
-    public static void main(String[] args) {
-        Grid grid = new Grid();
-        var t1 = new Tile(RED, ROUND);
-        var t2 = new Tile(RED, DIAMOND);
-        var t3 = new Tile(RED, PLUS);
-        grid.firstAdd(UP, t1, t2, t3);
-
-        var t4 = new Tile (RED, SQUARE);
-        var t5 = new Tile (BLUE, SQUARE);
-        var t6 = new Tile (PURPLE, SQUARE);
-        grid.add(46, 45,RIGHT, t4,t5,t6);
-
-        var t7 = new Tile(BLUE, ROUND);
-        grid.add( 45, 46, t7);
-
-        var t8 = new Tile(GREEN, PLUS);
-        var t9 = new Tile(GREEN, DIAMOND);
-        int score0 = grid.add( 43, 44, DOWN, t8,t9);
-
-        var t10 = new TileAtPosition(42, 44, new Tile(GREEN, STAR));
-        var t11 = new TileAtPosition(45, 44, new Tile(GREEN, ROUND));
-        int score = grid.add(t10, t11,new TileAtPosition(46 ,44,new Tile(GREEN,SQUARE)),
-                new TileAtPosition(41,44,new Tile(GREEN,CROSS)));
-        score = grid.add(new TileAtPosition(45,47,new Tile(PURPLE,ROUND)),
-                new TileAtPosition(47,47,new Tile(PURPLE,STAR)));
-        score = grid.add(47 ,45 ,Direction.RIGHT,new Tile(RED,STAR),new Tile(BLUE,STAR));
-        score = grid.add(48 ,47 , LEFT,     new Tile (PURPLE, CROSS), new Tile(BLUE,CROSS),new Tile(RED,CROSS));
-        View.displayGrid(new GridView(grid));
-        System.out.println("Score : " + score);
-
+        System.out.println("┌─────────────────────────────────────────────────┐");
+        System.out.println("| Congratulations, \033[1m\033[36m" + playerName + "\033[0m!");
+        System.out.println("| You won the game with a score of \033[1m\033[36m" + playerScore + "\033[0m. "
+                + "Well played!");
+        System.out.println("└─────────────────────────────────────────────────┘");
     }
 }
