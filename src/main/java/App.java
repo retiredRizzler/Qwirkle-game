@@ -79,7 +79,6 @@ public class App {
 
             View.display("Bag : " + Bag.getInstance().size() + " tiles left. ");
         }
-        View.displayEnd(game);
 
         while (!game.isOver())
         {
