@@ -435,7 +435,8 @@ public class Grid implements Serializable {
         return tile0.shape().equals(tile1.shape())
                 ^
                 ((tile0.color().equals(tile1.color())
-                        || (tile1.color() == Color.GREEN) || tile0.color() == Color.GREEN));
+                        || ((tile1.color() == Color.GREEN) && !tile0.shape().equals(tile1.shape()))));
+
     }
 
     /**
