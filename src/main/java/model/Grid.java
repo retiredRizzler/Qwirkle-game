@@ -386,6 +386,7 @@ public class Grid implements Serializable {
                             "or you chose at least two times the same tile. ");
                 }
 
+
                 nRow += d.getDeltaRow();
                 nCol += d.getDeltaCol();
                 nTile = tiles[nRow][nCol];
@@ -433,7 +434,8 @@ public class Grid implements Serializable {
     {
         return tile0.shape().equals(tile1.shape())
                 ^
-                tile0.color().equals(tile1.color());
+                ((tile0.color().equals(tile1.color())
+                        || (tile1.color() == Color.GREEN) || tile0.color() == Color.GREEN));
     }
 
     /**

@@ -15,7 +15,7 @@ public enum Color implements Serializable {
      * Constructor for Color enum
      * @param ansiCode the ansi code of the color
      */
-    private Color(String ansiCode)
+    Color(String ansiCode)
     {
         this.aCode = ansiCode;
     }

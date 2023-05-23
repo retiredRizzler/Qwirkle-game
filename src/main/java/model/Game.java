@@ -118,7 +118,7 @@ public class Game implements Serializable {
     {
         Tile[] tab = new Tile[is.length];
 
-        // Loop start iterate at index 3 of the is length
+        // Loop start iterate at index 3 of the is length because the tiles are found all the 3 indexes.
         for (int i = 2; i < tab.length; i+=3) {
             tab[i] = player[currentPlayer].getHand().get(is[i]);
         }
