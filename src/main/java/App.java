@@ -89,6 +89,7 @@ public class App {
             game.pass();
         }
 
+        game.getWinner();
         View.displayEnd(game);
     }
 

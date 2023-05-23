@@ -183,20 +183,32 @@ public class Game implements Serializable {
         if (Bag.getInstance().size() != 0) {
             return false;
         }
-
         for (int i = 0; i < player.length; i++ ) {
             Player p = player[i];
             if (p.getHand().isEmpty()) {
                 p.addScore(6);
-                currentPlayer = i;
                 return true;
             }
             if (grid.isPossibleMove(p.getHand())) {
-                currentPlayer = i;
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Calculate the highest score and determines the winner with the currentPlayer
+     */
+    public void getWinner()
+    {
+        int maxScore = player[0].getScore();
+        for (int i = 0; i < player.length; i++ ) {
+            Player p = player[i];
+            if (p.getScore() > maxScore) {
+                maxScore = p.getScore();
+                currentPlayer = i;
+            }
+        }
     }
 
     /**
